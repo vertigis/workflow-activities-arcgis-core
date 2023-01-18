@@ -6,19 +6,19 @@ import SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol";
 export default class SketchDefaults {
     static defaultPointSymbol = new SimpleMarkerSymbol({
         style: "circle",
-        color: [255, 255, 255, 100],
-        size: 16,
+        color: [0, 0, 0, 100],
+        size: 12,
     });
 
     static defaultPolylineSymbol = new SimpleLineSymbol({
         style: "solid",
-        color: [255, 255, 255, 100],
-        width: 6,
+        color: [0, 0, 0, 100],
+        width: 1.5,
     });
     static defaultPolygonSymbol = new SimpleFillSymbol({
         style: "none",
         outline: {
-            color: [255, 137, 245, 255],
+            color: [0, 0, 0, 100],
             width: 1.5,
         },
     });
