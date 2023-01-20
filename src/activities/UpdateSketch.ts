@@ -15,36 +15,33 @@ import SimpleLineSymbol from "@arcgis/core/symbols/SimpleLineSymbol";
 import MapView from "@arcgis/core/views/MapView";
 import SketchDefaults from "./SketchDefaults";
 
-/** An interface that defines the inputs of the activity. */
 interface UpdateSketchInputs {
     /**
-     * @displayName Graphics
+     * @description A graphic or an array of graphics to be updated. Only graphics added to layer input can be updated.
      * @required
      */
-    graphics: Graphic | Graphic[];        
+    graphics: Graphic | Graphic[];    
+        
     /**
-     * @displayName Layer
+     * @description The Graphics Layer the contains the graphics to be updated.
      * @required
      */
     layer: GraphicsLayer;
 
     /**
-     * @displayName Symbol
+     * @description The Symbol to be used to render the sketch.
      */
     // eslint-disable-next-line @typescript-eslint/ban-types
     symbol?: Symbol;  
 
     /**
-     * @displayName Update Options
+     * @description Update options for the graphics to be updated.
+     * @link https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Sketch-SketchViewModel.html#update
      */
-    updateOptions?: any;    
+    updateOptions?: __esri.SketchViewModelDefaultUpdateOptions;    
 }
 
-/** An interface that defines the outputs of the activity. */
 interface UpdateSketchOutputs {
-    /**
-     * @description The result of the activity.
-     */
     layer: GraphicsLayer;
     graphics: Graphic[];
 }

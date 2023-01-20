@@ -15,33 +15,22 @@ import SimpleLineSymbol from "@arcgis/core/symbols/SimpleLineSymbol";
 import MapView from "@arcgis/core/views/MapView";
 import SketchDefaults from "./SketchDefaults";
 
-/** An interface that defines the inputs of the activity. */
 export interface DeleteSketchInputs {
     /**
-     * @displayName Graphics
+     * @description A graphic or an array of graphics to be updated. Only graphics added to layer input can be deleted.
      * @required
      */
-    graphics: Graphic | Graphic[];        
+    graphics: Graphic | Graphic[];    
+        
     /**
-     * @displayName Layer
+     * @description The Graphics Layer the contains the graphics to be deleted.
      * @required
      */
     layer: GraphicsLayer;
 
-    /**
-     * @displayName Symbol
-     */
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    symbol?: Symbol;    
-
 }
 
-/** An interface that defines the outputs of the activity. */
 export interface DeleteSketchOutputs {
-
-    /**
-     * @description The result of the activity.
-     */
     layer: GraphicsLayer;
 }
 
@@ -58,7 +47,7 @@ export default class DeleteSketch implements IActivityHandler {
         context: IActivityContext,
         type: typeof MapProvider
     ): Promise<DeleteSketchOutputs> {
-        const { graphics, layer, symbol} = inputs;
+        const { graphics, layer} = inputs;
         const mapProvider = type.create();
         await mapProvider.load();
         if (!mapProvider.map) {
@@ -73,31 +62,7 @@ export default class DeleteSketch implements IActivityHandler {
             view: mapView,
             layer: layer,
         });
-        if (symbol != undefined) {
-            switch (symbol.type) {
-                case "simple-fill":
-                    view.polygonSymbol = symbol as SimpleFillSymbol;
-                    break;
-                case "simple-marker":
-                    view.pointSymbol = symbol as SimpleMarkerSymbol;
-                    break;
-                case "simple-line":
-                    view.polylineSymbol = symbol as SimpleLineSymbol;
-            }
-        } else {
-            switch (geometryType) {
-                case "polygon":
-                case "extent":
-                    view.polygonSymbol = SketchDefaults.defaultPolygonSymbol;
-                    break;
-                case "point":
-                case "multipoint":
-                    view.pointSymbol = SketchDefaults.defaultPointSymbol;
-                    break;
-                case "polyline":
-                    view.polylineSymbol = SketchDefaults.defaultPolylineSymbol;
-            }
-        }        
+              
         await view.update(graphics);
         await new Promise((resolve) => {
             view.on("update", function (event) {

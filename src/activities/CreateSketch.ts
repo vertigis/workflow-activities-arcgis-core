@@ -15,10 +15,8 @@ import SimpleLineSymbol from "@arcgis/core/symbols/SimpleLineSymbol";
 import MapView from "@arcgis/core/views/MapView";
 import SketchDefaults from "./SketchDefaults";
 
-/** An interface that defines the inputs of the activity. */
 export interface CreateSketchInputs {
     /**
-     * @displayName Sketch Type
      * @required
      */
     sketchType:
@@ -27,31 +25,29 @@ export interface CreateSketchInputs {
         | "polyline"
         | "polygon"
         | "rectangle"
-        | "circle";
+        | "circle"
 
     /**
      * @displayName Graphics Layer Id
+     * @description The Graphics layer to add the new graphic to.  If the layer does not exist in the map, a new one is created with the provided Id.
      * @required
      */
     layerId: string;
 
     /**
-     * @displayName Symbol
+     * @description The Symbol to be used to render the sketch.
      */
     // eslint-disable-next-line @typescript-eslint/ban-types
     symbol?: Symbol;
 
     /**
-     * @displayName Create Options
+     * @description Options for graphic to be created
+     * @link https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Sketch-SketchViewModel.html#create
      */
-    createOptions?: any;
+    createOptions?: __esri.SketchViewModelCreateCreateOptions;
 }
 
-/** An interface that defines the outputs of the activity. */
 export interface CreateSketchOutputs {
-    /**
-     * @description The result of the activity.
-     */
     graphic: Graphic | undefined;
     layer: GraphicsLayer | undefined;
 }
