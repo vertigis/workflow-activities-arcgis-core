@@ -8,25 +8,14 @@ import { activate } from "@geocortex/workflow/runtime/Hooks";
 import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel";
 import Graphic from "@arcgis/core/Graphic";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
-import Symbol from "@arcgis/core/symbols/Symbol";
-import SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol";
-import SimpleFillSymbol from "@arcgis/core/symbols/SimpleFillSymbol";
-import SimpleLineSymbol from "@arcgis/core/symbols/SimpleLineSymbol";
 import MapView from "@arcgis/core/views/MapView";
-import SketchDefaults from "./SketchDefaults";
 
 export interface DeleteSketchInputs {
     /**
-     * @description A graphic or an array of graphics to be updated. Only graphics added to layer input can be deleted.
+     * @description A graphic or an array of graphics to be updated.
      * @required
      */
-    graphics: Graphic | Graphic[];
-
-    /**
-     * @description The Graphics Layer that contains the graphics to be deleted.
-     * @required
-     */
-    layer: GraphicsLayer;
+    graphics?: Graphic | Graphic[];
 
 }
 
@@ -38,7 +27,7 @@ export interface DeleteSketchOutputs {
  * @category ArcGIS Core
  * @description Deletes graphics defined in the Graphics parameter from the map.
  * @clientOnly
- * @unsupportedApps GMV, GVH, WAB
+ * @supportedApps EXB, GWV
  * */
 @activate(MapProvider)
 export default class DeleteSketch implements IActivityHandler {
@@ -47,17 +36,17 @@ export default class DeleteSketch implements IActivityHandler {
         context: IActivityContext,
         type: typeof MapProvider
     ): Promise<DeleteSketchOutputs> {
-        const { graphics, layer } = inputs;
+        const { graphics } = inputs;
         const mapProvider = type.create();
         await mapProvider.load();
         if (!mapProvider.map) {
             throw new Error("map is required");
         }
-        const geometryType = Array.isArray(graphics)
-            ? graphics[0].geometry.type
-            : graphics.geometry.type;
+        if (!graphics) {
+            throw new Error("graphics is required")
+        }
         const mapView = mapProvider.view as MapView;
-
+        const layer = graphics[0].layer;
         const view = new SketchViewModel({
             view: mapView,
             layer: layer,
@@ -71,6 +60,9 @@ export default class DeleteSketch implements IActivityHandler {
                     resolve(true);
                 }
             });
+            // In order to delete the provided graphic we need to add the graphic via update() which, sets the active 
+            // graphic, and then emit an update event to delete it.  This is the recommended approach from Esri 
+            // https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Sketch-SketchViewModel.html#delete
             view.emit("update", {
                 graphic: graphics,
                 state: "active",

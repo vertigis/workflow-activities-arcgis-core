@@ -56,7 +56,7 @@ export interface CreateSketchOutputs {
  * @clientOnly
  * @description Sketch a graphic on the map with the geometry specified by the Sketch Type parameter.
  * @helpUrl https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Sketch-SketchViewModel.html#create
- * @unsupportedApps GMV, GVH, WAB
+ * @supportedApps EXB, GWV
  */
 @activate(MapProvider)
 export default class CreateSketch implements IActivityHandler {

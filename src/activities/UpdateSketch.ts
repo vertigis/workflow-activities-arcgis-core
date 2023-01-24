@@ -15,28 +15,22 @@ import SketchDefaults from "./SketchDefaults";
 
 interface UpdateSketchInputs {
     /**
-     * @description A graphic or an array of graphics to be updated. Only graphics added to layer input can be updated.
+     * @description A graphic or an array of graphics to be updated.
      * @required
      */
-    graphics: Graphic | Graphic[];    
-        
-    /**
-     * @description The Graphics Layer the contains the graphics to be updated.
-     * @required
-     */
-    layer: GraphicsLayer;
+    graphics?: Graphic | Graphic[];
 
     /**
      * @description The Symbol to be used to render the sketch.
      */
     // eslint-disable-next-line @typescript-eslint/ban-types
-    symbol?: Symbol;  
+    symbol?: Symbol;
 
     /**
      * @description Update options for the graphics to be updated.
      * @link https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Sketch-SketchViewModel.html#update
      */
-    updateOptions?: __esri.SketchViewModelDefaultUpdateOptions;    
+    updateOptions?: __esri.SketchViewModelDefaultUpdateOptions;
 }
 
 interface UpdateSketchOutputs {
@@ -49,19 +43,23 @@ interface UpdateSketchOutputs {
  * @description Initializes an update operation for the specified graphic(s).
  * @helpUrl https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Sketch-SketchViewModel.html#update
  * @clientOnly
- * @unsupportedApps GMV, GVH, WAB
+ * @supportedApps EXB, GWV
  * */
 @activate(MapProvider)
 export default class UpdateSketch implements IActivityHandler {
     async execute(inputs: UpdateSketchInputs, context: IActivityContext,
         type: typeof MapProvider): Promise<UpdateSketchOutputs> {
-        const { graphics, layer, symbol } = inputs;
+        const { graphics, symbol } = inputs;
         const mapProvider = type.create();
         await mapProvider.load();
         if (!mapProvider.map) {
             throw new Error("map is required");
         }
+        if(!graphics) {
+            throw new Error("graphics is required")
+        }
         const mapView = mapProvider.view as MapView;
+        const layer = graphics[0].layer;
 
         const view = new SketchViewModel({
             view: mapView,
@@ -82,19 +80,19 @@ export default class UpdateSketch implements IActivityHandler {
                 case "simple-line":
                     view.polylineSymbol = symbol;
             }
-        } 
+        }
         await view.update(graphics);
-        
+
         const updatedGraphics: Graphic[] | undefined = await new Promise((resolve) => {
             view.on("update", function (event) {
                 if (event.state === "complete") {
                     resolve(event.graphics);
-                  } else if (event.aborted) {
+                } else if (event.aborted) {
                     resolve(undefined);
-                  } 
+                }
             });
         });
-        view.destroy();        
+        view.destroy();
         return {
             layer,
             graphics: updatedGraphics,
