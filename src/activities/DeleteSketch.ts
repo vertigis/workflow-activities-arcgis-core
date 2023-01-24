@@ -20,10 +20,10 @@ export interface DeleteSketchInputs {
      * @description A graphic or an array of graphics to be updated. Only graphics added to layer input can be deleted.
      * @required
      */
-    graphics: Graphic | Graphic[];    
-        
+    graphics: Graphic | Graphic[];
+
     /**
-     * @description The Graphics Layer the contains the graphics to be deleted.
+     * @description The Graphics Layer that contains the graphics to be deleted.
      * @required
      */
     layer: GraphicsLayer;
@@ -36,7 +36,7 @@ export interface DeleteSketchOutputs {
 
 /**
  * @category ArcGIS Core
- * @description Captures a point on the map.
+ * @description Deletes graphics defined in the Graphics parameter from the map.
  * @clientOnly
  * @unsupportedApps GMV, GVH, WAB
  * */
@@ -47,7 +47,7 @@ export default class DeleteSketch implements IActivityHandler {
         context: IActivityContext,
         type: typeof MapProvider
     ): Promise<DeleteSketchOutputs> {
-        const { graphics, layer} = inputs;
+        const { graphics, layer } = inputs;
         const mapProvider = type.create();
         await mapProvider.load();
         if (!mapProvider.map) {
@@ -62,15 +62,14 @@ export default class DeleteSketch implements IActivityHandler {
             view: mapView,
             layer: layer,
         });
-              
+
         await view.update(graphics);
         await new Promise((resolve) => {
             view.on("update", function (event) {
                 if (event.state === "active") {
                     view.delete();
-                    view.destroy();
                     resolve(true);
-                  }
+                }
             });
             view.emit("update", {
                 graphic: graphics,
@@ -78,9 +77,9 @@ export default class DeleteSketch implements IActivityHandler {
                 tool: "point",
                 toolEventInfo: {},
                 type: "create"
-                });
+            });
         });
-
+        view.destroy();
         return {
             layer,
         };

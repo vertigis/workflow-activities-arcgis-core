@@ -8,10 +8,8 @@ import { activate } from "@geocortex/workflow/runtime/Hooks";
 import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel";
 import Graphic from "@arcgis/core/Graphic";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
-import Symbol from "@arcgis/core/symbols/Symbol";
-import SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol";
-import SimpleFillSymbol from "@arcgis/core/symbols/SimpleFillSymbol";
-import SimpleLineSymbol from "@arcgis/core/symbols/SimpleLineSymbol";
+import { Symbol } from "@arcgis/core/symbols";
+
 import MapView from "@arcgis/core/views/MapView";
 import SketchDefaults from "./SketchDefaults";
 
@@ -43,7 +41,7 @@ interface UpdateSketchInputs {
 
 interface UpdateSketchOutputs {
     layer: GraphicsLayer;
-    graphics: Graphic[];
+    graphics: Graphic[] | undefined;
 }
 
 /**
@@ -62,50 +60,40 @@ export default class UpdateSketch implements IActivityHandler {
         if (!mapProvider.map) {
             throw new Error("map is required");
         }
-        const geometryType = Array.isArray(graphics)
-            ? graphics[0].geometry.type
-            : graphics.geometry.type;
         const mapView = mapProvider.view as MapView;
 
         const view = new SketchViewModel({
             view: mapView,
             layer: layer,
+            pointSymbol: SketchDefaults.defaultPointSymbol,
+            polygonSymbol: SketchDefaults.defaultPolygonSymbol,
+            polylineSymbol: SketchDefaults.defaultPolylineSymbol,
         });
+
         if (symbol != undefined) {
             switch (symbol.type) {
                 case "simple-fill":
-                    view.polygonSymbol = symbol as SimpleFillSymbol;
+                    view.polygonSymbol = symbol;
                     break;
                 case "simple-marker":
-                    view.pointSymbol = symbol as SimpleMarkerSymbol;
+                    view.pointSymbol = symbol;
                     break;
                 case "simple-line":
-                    view.polylineSymbol = symbol as SimpleLineSymbol;
+                    view.polylineSymbol = symbol;
             }
-        } else {
-            switch (geometryType) {
-                case "polygon":
-                case "extent":
-                    view.polygonSymbol = SketchDefaults.defaultPolygonSymbol;
-                    break;
-                case "point":
-                case "multipoint":
-                    view.pointSymbol = SketchDefaults.defaultPointSymbol;
-                    break;
-                case "polyline":
-                    view.polylineSymbol = SketchDefaults.defaultPolylineSymbol;
-            }
-        }
+        } 
         await view.update(graphics);
         
-        const updatedGraphics: Graphic[] = await new Promise((resolve) => {
+        const updatedGraphics: Graphic[] | undefined = await new Promise((resolve) => {
             view.on("update", function (event) {
                 if (event.state === "complete") {
                     resolve(event.graphics);
-                    view.destroy();
+                  } else if (event.aborted) {
+                    resolve(undefined);
                   } 
             });
         });
+        view.destroy();        
         return {
             layer,
             graphics: updatedGraphics,

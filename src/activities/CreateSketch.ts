@@ -8,15 +8,13 @@ import { activate } from "@geocortex/workflow/runtime/Hooks";
 import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel";
 import Graphic from "@arcgis/core/Graphic";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
-import Symbol from "@arcgis/core/symbols/Symbol";
-import SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol";
-import SimpleFillSymbol from "@arcgis/core/symbols/SimpleFillSymbol";
-import SimpleLineSymbol from "@arcgis/core/symbols/SimpleLineSymbol";
+import { Symbol } from "@arcgis/core/symbols";
 import MapView from "@arcgis/core/views/MapView";
 import SketchDefaults from "./SketchDefaults";
 
 export interface CreateSketchInputs {
     /**
+     * @description This property reflects the create tool used to sketch the graphic.
      * @required
      */
     sketchType:
@@ -26,6 +24,7 @@ export interface CreateSketchInputs {
         | "polygon"
         | "rectangle"
         | "circle"
+        | string;
 
     /**
      * @displayName Graphics Layer Id
@@ -55,6 +54,8 @@ export interface CreateSketchOutputs {
 /**
  * @category ArcGIS Core
  * @clientOnly
+ * @description Sketch a graphic on the map with the geometry specified by the Sketch Type parameter.
+ * @helpUrl https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Sketch-SketchViewModel.html#create
  * @unsupportedApps GMV, GVH, WAB
  */
 @activate(MapProvider)
@@ -75,9 +76,9 @@ export default class CreateSketch implements IActivityHandler {
         const mapView = mapProvider.view as MapView;
 
         let layer: GraphicsLayer = mapView.map.allLayers.find(
-            (x) => x.id == layerId && x.type == "graphics"
+            (x) => x.id === layerId && x.type === "graphics"
         ) as GraphicsLayer;
-        if (layer == undefined) {
+        if (!layer) {
             layer = new GraphicsLayer({ id: layerId });
             mapView.map.layers.add(layer);
         }
@@ -85,48 +86,37 @@ export default class CreateSketch implements IActivityHandler {
         const view = new SketchViewModel({
             view: mapView,
             layer: layer,
+            pointSymbol: SketchDefaults.defaultPointSymbol,
+            polygonSymbol: SketchDefaults.defaultPolygonSymbol,
+            polylineSymbol: SketchDefaults.defaultPolylineSymbol,
         });
         if (symbol != undefined) {
             switch (symbol.type) {
                 case "simple-fill":
-                    view.polygonSymbol = symbol as SimpleFillSymbol;
+                    view.polygonSymbol = symbol;
                     break;
                 case "simple-marker":
-                    view.pointSymbol = symbol as SimpleMarkerSymbol;
+                    view.pointSymbol = symbol;
                     break;
                 case "simple-line":
-                    view.polylineSymbol = symbol as SimpleLineSymbol;
+                    view.polylineSymbol = symbol;
             }
-        } else {
-            switch (sketchType) {
-                case "polygon":
-                case "rectangle":
-                case "circle":
-                    view.polygonSymbol = SketchDefaults.defaultPolygonSymbol;
-                    break;
-                case "point":
-                case "multipoint":
-                    view.pointSymbol = SketchDefaults.defaultPointSymbol;
-                    break;
-                case "polyline":
-                    view.polylineSymbol = SketchDefaults.defaultPolylineSymbol;
-            }
-        }
-        view.create(sketchType, createOptions);
+        } 
+        view.create(sketchType as any, createOptions);
         const output: Graphic | undefined = await new Promise((resolve) => {
             view.on("create", function (event) {
                 if (event.state === "complete") {
                     resolve(event.graphic);
-                    view.destroy();
                 } else if (event.state === "cancel") {
                     resolve(undefined);
-                    view.destroy();
                 }
             });
         });
+        view.destroy();        
         return {
             graphic: output,
             layer: layer,
         };
+
     }
 }
