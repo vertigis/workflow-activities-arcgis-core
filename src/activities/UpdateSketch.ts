@@ -46,7 +46,8 @@ interface UpdateSketchOutputs {
 
 /**
  * @category ArcGIS Core
- * @description Captures a point on the map.
+ * @description Initializes an update operation for the specified graphic(s).
+ * @helpUrl https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Sketch-SketchViewModel.html#update
  * @clientOnly
  * @unsupportedApps GMV, GVH, WAB
  * */
