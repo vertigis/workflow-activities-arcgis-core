@@ -2,5 +2,3 @@
 export { default as CreateSketch } from "./activities/CreateSketch";
 
 export {default as UpdateSketch} from "./activities/UpdateSketch";
-
-export { default as DeleteSketch } from "./activities/DeleteSketch";
