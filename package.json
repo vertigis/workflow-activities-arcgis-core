@@ -1,15 +1,19 @@
 {
     "name": "@vertigis/workflow-activities-arcgis-core",
-    "private": true,
     "version": "0.0.0-semantically-released",
-    "description": "ArcGIS JavaScript API activities for VertiGIS Studio Workflow",
+    "description": "ArcGIS Maps SDK for JavaScript activities for VertiGIS Studio Workflow",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/vertigis/workflow-activities-arcgis-core.git"
+    },
     "license": "MIT",
     "author": "VertiGIS",
-    "homepage": "https://github.com/vertigis/arcgis-core#readme",
+    "homepage": "https://github.com/vertigis/workflow-activities-arcgis-core#readme",
     "keywords": [
         "VertiGIS",
         "Geocortex",
         "Workflow",
+        "ArcGIS Maps SDK for JavaScript",
         "ArcGIS JavaScript API",
         "ArcGIS",
         "GIS"
