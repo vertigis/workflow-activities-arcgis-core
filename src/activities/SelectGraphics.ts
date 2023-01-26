@@ -9,7 +9,7 @@ import { MapProvider } from "@geocortex/workflow/runtime/activities/arcgis/MapPr
 import { activate } from "@geocortex/workflow/runtime/Hooks";
 import MapView from "@arcgis/core/views/MapView";
 
-interface SelectGraphicInputs {
+interface SelectGraphicsInputs {
     /**
      * @description A graphics layer that contains the graphics to be selected.
      * @required
@@ -18,7 +18,7 @@ interface SelectGraphicInputs {
 
 }
 
-interface SelectGraphicOutputs {
+interface SelectGraphicsOutputs {
     /**
      * @description The selected graphics.
      */
@@ -34,14 +34,14 @@ interface SelectGraphicOutputs {
 @activate(MapProvider)
 export default class SelectGraphics implements IActivityHandler {
 
-    async execute(inputs: SelectGraphicInputs, context: IActivityContext,
-        type: typeof MapProvider): Promise<SelectGraphicOutputs> {
+    async execute(inputs: SelectGraphicsInputs, context: IActivityContext,
+        type: typeof MapProvider): Promise<SelectGraphicsOutputs> {
         const { layer } = inputs;
         const mapProvider = type.create();
         await mapProvider.load();
         let pointerHandle: IHandle;
         let clickHandle: IHandle;
-        let keydown;
+        let keyDown;
         if (!mapProvider.view) {
             throw new Error("view is required");
         }
@@ -71,7 +71,7 @@ export default class SelectGraphics implements IActivityHandler {
                         if (results[0].type === "graphic") {
                             pointerHandle.remove();
                             clickHandle.remove();
-                            mapView.container.ownerDocument?.removeEventListener("keydown", keydown);
+                            mapView.container.ownerDocument?.removeEventListener("keydown", keyDown);
                             mapView.container.style.cursor = "default";
                             const graphics = (results as __esri.GraphicHit[]).map(x=> x.graphic)
                             resolve(graphics);
@@ -81,17 +81,17 @@ export default class SelectGraphics implements IActivityHandler {
                 });
 
             });
-            keydown = (event: KeyboardEvent) => {
+            keyDown = (event: KeyboardEvent) => {
                 if (event.key === "ESC" || event.key === "Escape") {
                     event.stopPropagation();
                     pointerHandle.remove();
                     clickHandle.remove();
-                    mapView.container.ownerDocument?.removeEventListener("keydown", keydown);
+                    mapView.container.ownerDocument?.removeEventListener("keydown", keyDown);
                     mapView.container.style.cursor = "default";
                     resolve(undefined);
                 }
             };
-            mapView.container.ownerDocument?.addEventListener("keydown", keydown);
+            mapView.container.ownerDocument?.addEventListener("keydown", keyDown);
         });
         
         return {
