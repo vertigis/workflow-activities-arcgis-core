@@ -11,7 +11,7 @@ import MapView from "@arcgis/core/views/MapView";
 
 interface SelectGraphicInputs {
     /**
-     * @description A graphics layer that contains the graphic to be selected.
+     * @description A graphics layer that contains the graphics to be selected.
      * @required
      */
     layer?: GraphicsLayer;
@@ -20,14 +20,14 @@ interface SelectGraphicInputs {
 
 interface SelectGraphicOutputs {
     /**
-     * @description The selected graphic.
+     * @description The selected graphics.
      */
-    graphic: Graphic | undefined;
+    graphics: Graphic[] | undefined;
 }
 
 /**
  * @category ArcGIS Maps SDK for JavaScript
- * @description Allows the user to select a graphic on the map.
+ * @description Allows the user to select graphics on the map.
  * @clientOnly
  * @supportedApps EXB, GWV
  * */
@@ -50,7 +50,7 @@ export default class SelectGraphics implements IActivityHandler {
         }
         const mapView = mapProvider.view as MapView;
 
-        const graphic: Graphic | undefined = await new Promise((resolve) => {
+        const graphics: Graphic[] | undefined = await new Promise((resolve) => {
             pointerHandle = mapView.on("pointer-move", (event: __esri.ViewPointerMoveEvent) => {
                 void mapView.hitTest(event).then((hitResult: __esri.HitTestResult) => {
                     const hit: boolean = hitResult.results.filter((result) => result.layer === layer).length > 0;
@@ -73,7 +73,8 @@ export default class SelectGraphics implements IActivityHandler {
                             clickHandle.remove();
                             mapView.container.ownerDocument?.removeEventListener("keydown", keydown);
                             mapView.container.style.cursor = "default";
-                            resolve(results[0].graphic);
+                            const graphics = (results as __esri.GraphicHit[]).map(x=> x.graphic)
+                            resolve(graphics);
                         }
                     }
 
@@ -94,7 +95,7 @@ export default class SelectGraphics implements IActivityHandler {
         });
         
         return {
-            graphic,
+            graphics,
         };
     }
 }
