@@ -26,10 +26,11 @@ interface SelectGraphicOutputs {
 }
 
 /**
- * @displayName SelectGraphics
- * @category Custom Activities
  * @description Allows the user to select a graphics on the map.
- */
+ * @category ArcGIS Core
+ * @clientOnly
+ * @supportedApps EXB, GWV
+ * */
 @activate(MapProvider)
 export default class SelectGraphics implements IActivityHandler {
     /** Perform the execution logic of the activity. */
