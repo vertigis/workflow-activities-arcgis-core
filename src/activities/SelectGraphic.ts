@@ -27,21 +27,20 @@ interface SelectGraphicOutputs {
 
 /**
  * @category ArcGIS Maps SDK for JavaScript
- * @description Allows the user to select a graphics on the map.
+ * @description Allows the user to select a graphic on the map.
  * @clientOnly
  * @supportedApps EXB, GWV
  * */
 @activate(MapProvider)
 export default class SelectGraphics implements IActivityHandler {
-    /** Perform the execution logic of the activity. */
 
     async execute(inputs: SelectGraphicInputs, context: IActivityContext,
         type: typeof MapProvider): Promise<SelectGraphicOutputs> {
         const { layer } = inputs;
         const mapProvider = type.create();
         await mapProvider.load();
-        let h1;
-        let h2;
+        let pointerHandle: IHandle;
+        let clickHandle: IHandle;
         let keydown;
         if (!mapProvider.view) {
             throw new Error("view is required");
@@ -52,7 +51,7 @@ export default class SelectGraphics implements IActivityHandler {
         const mapView = mapProvider.view as MapView;
 
         const graphic: Graphic | undefined = await new Promise((resolve) => {
-            h1 = mapView.on("pointer-move", (event: __esri.ViewPointerMoveEvent) => {
+            pointerHandle = mapView.on("pointer-move", (event: __esri.ViewPointerMoveEvent) => {
                 void mapView.hitTest(event).then((hitResult: __esri.HitTestResult) => {
                     const hit: boolean = hitResult.results.filter((result) => result.layer === layer).length > 0;
                     if (hit) {
@@ -64,13 +63,16 @@ export default class SelectGraphics implements IActivityHandler {
 
                 });
             });
-            h2 = mapView.on("click", (event: __esri.ViewClickEvent) => {
+            clickHandle = mapView.on("click", (event: __esri.ViewClickEvent) => {
                 void mapView.hitTest(event).then((hitResult: __esri.HitTestResult) => {
 
                     const results = hitResult.results.filter((result) => result.layer === layer);
                     if (results.length > 0) {
                         if (results[0].type === "graphic") {
-                            h1.remove();
+                            pointerHandle.remove();
+                            clickHandle.remove();
+                            mapView.container.ownerDocument?.removeEventListener("keydown", keydown);
+                            mapView.container.style.cursor = "default";
                             resolve(results[0].graphic);
                         }
                     }
@@ -81,16 +83,16 @@ export default class SelectGraphics implements IActivityHandler {
             keydown = (event: KeyboardEvent) => {
                 if (event.key === "ESC" || event.key === "Escape") {
                     event.stopPropagation();
-                    h1.remove();
+                    pointerHandle.remove();
+                    clickHandle.remove();
+                    mapView.container.ownerDocument?.removeEventListener("keydown", keydown);
+                    mapView.container.style.cursor = "default";
                     resolve(undefined);
                 }
             };
             mapView.container.ownerDocument?.addEventListener("keydown", keydown);
         });
-
-        mapView.container.style.cursor = "default";
-        h2.remove();
-        mapView.container.ownerDocument?.removeEventListener("keydown", keydown);
+        
         return {
             graphic,
         };
