@@ -52,7 +52,7 @@ export interface CreateSketchOutputs {
 }
 
 /**
- * @category ArcGIS Core
+ * @category ArcGIS Maps SDK for JavaScript
  * @clientOnly
  * @description Sketch a graphic on the map with the geometry specified by the Sketch Type parameter.
  * @helpUrl https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Sketch-SketchViewModel.html#create
