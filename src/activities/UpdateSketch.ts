@@ -9,29 +9,22 @@ import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel";
 import Graphic from "@arcgis/core/Graphic";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import { Symbol } from "@arcgis/core/symbols";
+
 import MapView from "@arcgis/core/views/MapView";
 import SketchDefaults from "./SketchDefaults";
 
-export interface CreateSketchInputs {
+interface UpdateSketchInputs {
     /**
-     * @description This property reflects the create tool used to sketch the graphic.
+     * @description A graphic or an array of graphics to be updated.
      * @required
      */
-    sketchType:
-        | "point"
-        | "multipoint"
-        | "polyline"
-        | "polygon"
-        | "rectangle"
-        | "circle"
-        | string;
+    graphics?: Graphic | Graphic[];
 
     /**
-     * @displayName Graphics Layer Id
-     * @description The Graphics layer to add the new graphic to.  If the layer does not exist in the map, a new one is created with the provided Id.
+     * @description A graphic or an array of graphics to be updated.
      * @required
      */
-    layerId: string;
+    layer?: GraphicsLayer;
 
     /**
      * @description The Symbol to be used to render the sketch.
@@ -40,50 +33,41 @@ export interface CreateSketchInputs {
     symbol?: Symbol;
 
     /**
-     * @description Options for graphic to be created
-     * @link https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Sketch-SketchViewModel.html#create
+     * @description Update options for the graphics to be updated.
+     * @link https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Sketch-SketchViewModel.html#update
      */
-    createOptions?: __esri.SketchViewModelCreateCreateOptions;
+    updateOptions?: __esri.SketchViewModelDefaultUpdateOptions;
 }
 
-export interface CreateSketchOutputs {
-    graphic: Graphic | undefined;
-    layer: GraphicsLayer | undefined;
+interface UpdateSketchOutputs {
+    layer: GraphicsLayer;
+    graphics: Graphic[] | undefined;
 }
 
 /**
  * @category ArcGIS Maps SDK for JavaScript
+ * @description Initializes an update operation for the specified graphic(s).
+ * @helpUrl https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Sketch-SketchViewModel.html#update
  * @clientOnly
- * @description Sketch a graphic on the map with the geometry specified by the Sketch Type parameter.
- * @helpUrl https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Sketch-SketchViewModel.html#create
  * @supportedApps EXB, GWV
- */
+ * */
 @activate(MapProvider)
-export default class CreateSketch implements IActivityHandler {
-    async execute(
-        inputs: CreateSketchInputs,
-        context: IActivityContext,
-        type: typeof MapProvider
-    ): Promise<CreateSketchOutputs> {
-        const { symbol, layerId, sketchType, createOptions } = inputs;
-
+export default class UpdateSketch implements IActivityHandler {
+    async execute(inputs: UpdateSketchInputs, context: IActivityContext,
+        type: typeof MapProvider): Promise<UpdateSketchOutputs> {
+        const { graphics, layer, symbol } = inputs;
         const mapProvider = type.create();
         await mapProvider.load();
-        if (!mapProvider.map) {
-            throw new Error("map is required");
+        if (!mapProvider.view) {
+            throw new Error("view is required");
         }
-
-        const mapView = mapProvider.view as MapView;
-        let h1;
-        let layer: GraphicsLayer = mapView.map.allLayers.find(
-            (x) => x.id === layerId && x.type === "graphics"
-        ) as GraphicsLayer;
         if (!layer) {
-            
-            layer = new GraphicsLayer({ id: layerId });
-            mapView.map.layers.add(layer);
+            throw new Error("layer is required");
         }
-
+        const mapView = mapProvider.view as MapView;
+        let pointerHandle: IHandle;
+        let keyDown;
+        let updatedGraphics: Graphic[] | undefined = undefined;
         const view = new SketchViewModel({
             view: mapView,
             layer: layer,
@@ -91,6 +75,7 @@ export default class CreateSketch implements IActivityHandler {
             polygonSymbol: SketchDefaults.defaultPolygonSymbol,
             polylineSymbol: SketchDefaults.defaultPolylineSymbol,
         });
+
         if (symbol != undefined) {
             switch (symbol.type) {
                 case "simple-fill":
@@ -102,24 +87,66 @@ export default class CreateSketch implements IActivityHandler {
                 case "simple-line":
                     view.polylineSymbol = symbol;
             }
-        } 
-        view.create(sketchType as any, createOptions);
-        const output: Graphic | undefined = await new Promise((resolve) => {
-            h1 = view.on("create", function (event) {
-                if (event.state === "complete") {
-                    resolve(event.graphic);
-                } else if (event.state === "cancel") {
-                    resolve(undefined);
-                }
+        }
+
+        if (!graphics) {
+            updatedGraphics = await new Promise((resolve) => {
+                pointerHandle = mapView.on("pointer-move", (event: __esri.ViewPointerMoveEvent) => {
+                    void mapView.hitTest(event).then((hitResult: __esri.HitTestResult) => {
+                        const hit: boolean = hitResult.results.filter((result) => result.layer === layer).length > 0;
+                        if (hit) {
+                            mapView.container.style.cursor = "pointer";
+                        } else {
+                            mapView.container.style.cursor = "default";
+                        }
+                        event.stopPropagation();
+
+                    });
+                });
+
+                keyDown = (event: KeyboardEvent) => {
+                    if (event.key === "ESC" || event.key === "Escape") {
+                        event.stopPropagation();
+                        pointerHandle.remove();
+                        mapView.container.ownerDocument?.removeEventListener("keydown", keyDown);
+                        mapView.container.style.cursor = "default";
+                        resolve(undefined);
+                    }
+                };
+                mapView.container.ownerDocument?.addEventListener("keydown", keyDown);
+
+                view.on("update", function (event) {
+                    if (event.state === "complete") {
+                        pointerHandle.remove();
+                        mapView.container.ownerDocument?.removeEventListener("keydown", keyDown);
+                        mapView.container.style.cursor = "default";
+                        resolve(event.graphics);
+                    } else if (event.aborted) {
+                        pointerHandle.remove();
+                        mapView.container.ownerDocument?.removeEventListener("keydown", keyDown);
+                        mapView.container.style.cursor = "default";
+                        resolve(undefined);
+                    }
+                });
             });
-        });
-        h1.remove();
-        view.destroy(); 
+        } else {
+            await view.update(graphics);
+            updatedGraphics = await new Promise((resolve) => {
+                view.on("update", function (event) {
+                    if (event.state === "complete") {
+                        resolve(event.graphics);
+                    } else if (event.aborted) {
+                        resolve(undefined);
+                    }
 
+                });
+            });
+        }
+
+        view.destroy();
         return {
-            graphic: output,
-            layer: layer,
+            layer,
+            graphics: updatedGraphics,
         };
-
     }
 }
