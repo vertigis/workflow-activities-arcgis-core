@@ -39,7 +39,7 @@ interface UpdateSketchOutputs {
 }
 
 /**
- * @category ArcGIS Core
+ * @category ArcGIS Maps SDK for JavaScript
  * @description Initializes an update operation for the specified graphic(s).
  * @helpUrl https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Sketch-SketchViewModel.html#update
  * @clientOnly
