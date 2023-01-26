@@ -64,6 +64,10 @@ export default class UpdateSketch implements IActivityHandler {
         if (!layer) {
             throw new Error("layer is required");
         }
+
+        if (!graphics) {
+            throw new Error("graphics are required");
+        }
         const mapView = mapProvider.view as MapView;
         let pointerHandle: IHandle;
         let keyDown;
@@ -89,59 +93,18 @@ export default class UpdateSketch implements IActivityHandler {
             }
         }
 
-        if (!graphics) {
-            updatedGraphics = await new Promise((resolve) => {
-                pointerHandle = mapView.on("pointer-move", (event: __esri.ViewPointerMoveEvent) => {
-                    void mapView.hitTest(event).then((hitResult: __esri.HitTestResult) => {
-                        const hit: boolean = hitResult.results.filter((result) => result.layer === layer).length > 0;
-                        if (hit) {
-                            mapView.container.style.cursor = "pointer";
-                        } else {
-                            mapView.container.style.cursor = "default";
-                        }
-                        event.stopPropagation();
+        await view.update(graphics);
+        updatedGraphics = await new Promise((resolve) => {
+            view.on("update", function (event) {
+                if (event.state === "complete") {
+                    resolve(event.graphics);
+                } else if (event.aborted) {
+                    resolve(undefined);
+                }
 
-                    });
-                });
-
-                keyDown = (event: KeyboardEvent) => {
-                    if (event.key === "ESC" || event.key === "Escape") {
-                        event.stopPropagation();
-                        pointerHandle.remove();
-                        mapView.container.ownerDocument?.removeEventListener("keydown", keyDown);
-                        mapView.container.style.cursor = "default";
-                        resolve(undefined);
-                    }
-                };
-                mapView.container.ownerDocument?.addEventListener("keydown", keyDown);
-
-                view.on("update", function (event) {
-                    if (event.state === "complete") {
-                        pointerHandle.remove();
-                        mapView.container.ownerDocument?.removeEventListener("keydown", keyDown);
-                        mapView.container.style.cursor = "default";
-                        resolve(event.graphics);
-                    } else if (event.aborted) {
-                        pointerHandle.remove();
-                        mapView.container.ownerDocument?.removeEventListener("keydown", keyDown);
-                        mapView.container.style.cursor = "default";
-                        resolve(undefined);
-                    }
-                });
             });
-        } else {
-            await view.update(graphics);
-            updatedGraphics = await new Promise((resolve) => {
-                view.on("update", function (event) {
-                    if (event.state === "complete") {
-                        resolve(event.graphics);
-                    } else if (event.aborted) {
-                        resolve(undefined);
-                    }
+        });
 
-                });
-            });
-        }
 
         view.destroy();
         return {
