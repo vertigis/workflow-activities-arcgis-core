@@ -27,7 +27,7 @@ interface SelectGraphicsOutputs {
 
 /**
  * @category ArcGIS Maps SDK for JavaScript
- * @description Allows the user to select graphics on the map.
+ * @description Allows the user to select graphics container in the provided Graphics Layer on the map.
  * @clientOnly
  * @supportedApps EXB, GWV
  * */
