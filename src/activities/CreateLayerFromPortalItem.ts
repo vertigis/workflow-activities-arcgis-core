@@ -3,7 +3,7 @@ import Layer from "@arcgis/core/layers/Layer";
 
 interface CreateLayerFromPortalItemInputs {
     /**
-     * @description The object representing an ArcGIS portal item from which to load the layer.
+     * @description The ID of an ArcGIS portal item an object representing the item from which to load the layer.
      * @required
      */
     portalItem: string | { id: string };
