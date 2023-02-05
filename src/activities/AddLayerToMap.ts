@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { IActivityHandler } from "@geocortex/workflow/runtime";
 import { MapProvider } from "@geocortex/workflow/runtime/activities/arcgis/MapProvider";
 import { activate } from "@geocortex/workflow/runtime/Hooks";
