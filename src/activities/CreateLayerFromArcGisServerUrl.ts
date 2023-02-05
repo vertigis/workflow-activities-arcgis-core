@@ -19,7 +19,7 @@ interface CreateLayerFromArcGisServerUrlOutputs {
     /**
      * @description The layer result of the activity.
      */
-    result: Layer;
+    result: __esri.Layer;
 }
 
 /**

@@ -3,7 +3,6 @@ import type { IActivityHandler } from "@geocortex/workflow/runtime";
 import { MapProvider } from "@geocortex/workflow/runtime/activities/arcgis/MapProvider";
 import { activate } from "@geocortex/workflow/runtime/Hooks";
 import type { IActivityContext } from "@geocortex/workflow/runtime/IActivityHandler";
-import Layer from "@arcgis/core/layers/Layer";
 import WebMap from "@arcgis/core/WebMap";
 
 interface AddLayerToMapInputs {
@@ -11,7 +10,7 @@ interface AddLayerToMapInputs {
      * @description The layer or layers to add.
      * @required
      */
-    layer?: Layer | Layer[];
+    layer?: __esri.Layer | __esri.Layer[];
     /**
      * @description The index at which to add the layer or layers.
      */
