@@ -10,3 +10,6 @@ export { default as SelectGraphic } from "./activities/SelectGraphic";
 
 export { default as SelectGraphics } from "./activities/SelectGraphics";
 >>>>>>> 1bd0783 (fix:)
+export { default as UpdateSketch } from "./activities/UpdateSketch";
+
+export { default as SelectGraphics } from "./activities/SelectGraphics";
