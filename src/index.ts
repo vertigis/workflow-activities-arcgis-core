@@ -6,4 +6,4 @@ export { default as CreateSketch } from "./activities/CreateSketch";
 export { default as UpdateSketch } from "./activities/UpdateSketch";
 export { default as CreateMeasurement2D } from "./activities/CreateMeasurement2D";
 export { default as RemoveMeasurement } from "./activities/RemoveMeasurement";
-
+export { default as CreateMeasurement3D } from "./activities/CreateMeasurement3D";
