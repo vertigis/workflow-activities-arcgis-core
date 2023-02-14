@@ -4,5 +4,4 @@ export { default as CreateLayerFromArcGisServerUrl } from "./activities/CreateLa
 export { default as CreateLayerFromPortalItem } from "./activities/CreateLayerFromPortalItem";
 export { default as CreateSketch } from "./activities/CreateSketch";
 export { default as UpdateSketch } from "./activities/UpdateSketch";
-
 export { default as SelectGraphics } from "./activities/SelectGraphics";
