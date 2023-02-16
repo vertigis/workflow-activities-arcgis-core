@@ -69,8 +69,6 @@ export default class UpdateSketch implements IActivityHandler {
             throw new Error("graphics are required");
         }
         const mapView = mapProvider.view as MapView;
-        let pointerHandle: IHandle;
-        let keyDown;
         let updatedGraphics: Graphic[] | undefined = undefined;
         const view = new SketchViewModel({
             view: mapView,

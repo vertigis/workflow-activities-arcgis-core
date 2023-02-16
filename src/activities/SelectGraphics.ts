@@ -40,11 +40,10 @@ export default class SelectGraphics implements IActivityHandler {
         let pointerHandle: __esri.Handle | undefined;
         let clickHandle: __esri.Handle | undefined;
         let highlightHandle: __esri.Handle | undefined;
-        let keyDown;
         let graphics: Graphic[] | undefined;
         const { layer } = inputs;
         const mapProvider = type.create();
-
+        let keyDown: ((event: KeyboardEvent) => void) | undefined;
         await mapProvider.load();
         if (!mapProvider.view) {
             throw new Error("map view not found");
@@ -78,15 +77,6 @@ export default class SelectGraphics implements IActivityHandler {
                             resolve(graphics);
                         }
                     })();
-                    void mapView.hitTest(event).then((hitResult: __esri.HitTestResult) => {
-                        const results = hitResult.results.some((result) => result.layer === layer);
-                        if (results) {
-                            const hitResults = hitResult.results.filter(x => x.type === "graphic" && x.layer === layer);
-                            const graphics = (hitResults as __esri.GraphicHit[]).map(x => x.graphic);
-                            resolve(graphics);
-                        }
-                    });
-
                 });
                 keyDown = (event: KeyboardEvent) => {
                     if (event.key === "ESC" || event.key === "Escape") {
