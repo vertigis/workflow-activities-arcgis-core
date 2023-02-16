@@ -21,6 +21,12 @@ interface UpdateSketchInputs {
     graphics?: Graphic | Graphic[];
 
     /**
+     * @description A graphic or an array of graphics to be updated.
+     * @required
+     */
+    layer?: GraphicsLayer;
+
+    /**
      * @description The Symbol to be used to render the sketch.
      */
     // eslint-disable-next-line @typescript-eslint/ban-types
@@ -49,18 +55,21 @@ interface UpdateSketchOutputs {
 export default class UpdateSketch implements IActivityHandler {
     async execute(inputs: UpdateSketchInputs, context: IActivityContext,
         type: typeof MapProvider): Promise<UpdateSketchOutputs> {
-        const { graphics, symbol } = inputs;
+        const { graphics, layer, symbol } = inputs;
         const mapProvider = type.create();
         await mapProvider.load();
-        if (!mapProvider.map) {
-            throw new Error("map is required");
+        if (!mapProvider.view) {
+            throw new Error("view is required");
         }
-        if(!graphics) {
-            throw new Error("graphics is required")
+        if (!layer) {
+            throw new Error("layer is required");
+        }
+
+        if (!graphics) {
+            throw new Error("graphics are required");
         }
         const mapView = mapProvider.view as MapView;
-        const layer = graphics[0].layer;
-
+        let updatedGraphics: Graphic[] | undefined = undefined;
         const view = new SketchViewModel({
             view: mapView,
             layer: layer,
@@ -81,17 +90,20 @@ export default class UpdateSketch implements IActivityHandler {
                     view.polylineSymbol = symbol;
             }
         }
-        await view.update(graphics);
 
-        const updatedGraphics: Graphic[] | undefined = await new Promise((resolve) => {
+        await view.update(graphics);
+        updatedGraphics = await new Promise((resolve) => {
             view.on("update", function (event) {
                 if (event.state === "complete") {
                     resolve(event.graphics);
                 } else if (event.aborted) {
                     resolve(undefined);
                 }
+
             });
         });
+
+
         view.destroy();
         return {
             layer,
@@ -99,4 +111,3 @@ export default class UpdateSketch implements IActivityHandler {
         };
     }
 }
-
