@@ -41,7 +41,7 @@ export interface CreateAreaMeasurementOutputs {
  * @supportedApps EXB, GWV
  */
 @activate(MapProvider)
-export default class CreateAreaMeasurement implements IActivityHandler {
+export default class CreateAreaMeasurement2D implements IActivityHandler {
     async execute(
         inputs: CreateAreaMeasurement2DInputs,
         context: IActivityContext,
