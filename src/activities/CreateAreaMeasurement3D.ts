@@ -7,35 +7,32 @@ import { MapProvider } from "@geocortex/workflow/runtime/activities/arcgis/MapPr
 import { activate } from "@geocortex/workflow/runtime/Hooks";
 import AreaMeasurement3D from "@arcgis/core/widgets/AreaMeasurement3D";
 import SceneView from "@arcgis/core/views/SceneView";
-type removeFunction = () => void;
-type areaMeasurementUnits = "metric" | "imperial" | "square-inches" | "square-feet" | "square-us-feet" | "square-yards" | "square-miles" | "square-meters" | "square-kilometers" | "acres" | "ares" | "hectares";
-type AreaMeasurement3DResult = {
-    mode: "euclidean" | "geodesic";
-    area: {
-        text: string;
-        state: string;
-    };
-    perimeterLength: {
-        text: string;
-        state: string;
-    };
-}
 
 /** An interface that defines the inputs of the activity. */
 interface CreateAreaMeasurement3DInputs {
     /**
      * @description Unit system (imperial or metric) or specific unit used for area values.
      */
-    areaUnit?: areaMeasurementUnits | string;
+    areaUnit?: "metric" | "imperial" | "square-inches" | "square-feet" | "square-us-feet" | "square-yards" | "square-miles" | "square-meters" | "square-kilometers" | "acres" | "ares" | "hectares" | string;
 }
 
 interface CreateAreaMeasurement3DOutputs {
 
-    measurement?: AreaMeasurement3DResult;
+    measurement?: {
+        mode: "euclidean" | "geodesic";
+        area: {
+            text: string;
+            state: string;
+        };
+        perimeterLength: {
+            text: string;
+            state: string;
+        };
+    };
     /**
      * @description Function that removes the measurement from the map.
      */
-    remove?: removeFunction;
+    remove?: () => void;
 
 }
 
@@ -60,7 +57,17 @@ export default class CreateAreaMeasurement3D implements IActivityHandler {
         }
         const mapView = mapProvider.view as SceneView;
         let keyDown: ((event: KeyboardEvent) => void) | undefined;
-        let measurement: AreaMeasurement3DResult | undefined;
+        let measurement: {
+            mode: "euclidean" | "geodesic";
+            area: {
+                text: string;
+                state: string;
+            };
+            perimeterLength: {
+                text: string;
+                state: string;
+            };
+        } | undefined;
 
         /**
          * Ideally this would be implemented using AreaMeasurement3DViewModel or DirectLineMeasurement3DViewModel
@@ -72,7 +79,7 @@ export default class CreateAreaMeasurement3D implements IActivityHandler {
             view: mapView,
             unit: areaUnit as any,
         });
-        let remove: removeFunction | undefined = () => measurementWidget.destroy();
+        let remove: (() => void) | undefined = () => measurementWidget.destroy();
 
         try {
             measurementWidget.viewModel.start();
@@ -87,7 +94,7 @@ export default class CreateAreaMeasurement3D implements IActivityHandler {
                         resolve(undefined);
                     }
                 };
-                mapView.container.ownerDocument?.addEventListener("keydown", keyDown);                
+                mapView.container.ownerDocument?.addEventListener("keydown", keyDown);
 
             });
         } finally {

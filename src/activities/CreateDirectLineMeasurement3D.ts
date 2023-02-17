@@ -7,8 +7,7 @@ import { MapProvider } from "@geocortex/workflow/runtime/activities/arcgis/MapPr
 import { activate } from "@geocortex/workflow/runtime/Hooks";
 import DirectLineMeasurement3D from "@arcgis/core/widgets/DirectLineMeasurement3D";
 import SceneView from "@arcgis/core/views/SceneView";
-type removeFunction = () => void;
-type linearMeasurementUnits = "metric" | "imperial" | "inches" | "feet" | "us-feet" | "yards" | "miles" | "nautical-miles" | "meters" | "kilometers";
+type removeFunction = (() => void);
 type DirectLineMeasurement3DResult = {
     measurementMode: "euclidean" | "geodesic";
     directDistance: {
@@ -30,17 +29,31 @@ interface CreateDirectLineMeasurement3DInputs {
     /**
      * @description Unit system (imperial or metric) or specific unit used for distance values.
      */
-    linearUnit?: linearMeasurementUnits | string;
+    linearUnit?: "metric" | "imperial" | "inches" | "feet" | "us-feet" | "yards" | "miles" | "nautical-miles" | "meters" | "kilometers" | string;
 
 }
 
 interface CreateDirectLineMeasurement3DOutputs {
 
-    measurement?: DirectLineMeasurement3DResult;
+    measurement?: {
+        measurementMode: "euclidean" | "geodesic";
+        directDistance: {
+            text: string;
+            state: string;
+        };
+        horizontalDistance: {
+            text: string;
+            state: string;
+        };
+        verticalDistance: {
+            text: string;
+            state: string;
+        };
+    };
     /**
      * @description Function that removes the measurement from the map.
      */
-    remove?: removeFunction;
+    remove?: () => void;
 
 }
 
@@ -65,7 +78,21 @@ export default class CreateDirectLineMeasurement3D implements IActivityHandler {
         }
         const mapView = mapProvider.view as SceneView;
         let keyDown: ((event: KeyboardEvent) => void) | undefined;
-        let measurement: DirectLineMeasurement3DResult | undefined;
+        let measurement: {
+            measurementMode: "euclidean" | "geodesic";
+            directDistance: {
+                text: string;
+                state: string;
+            };
+            horizontalDistance: {
+                text: string;
+                state: string;
+            };
+            verticalDistance: {
+                text: string;
+                state: string;
+            };
+        } | undefined;
         /**
          * Ideally this would be implemented using AreaMeasurement3DViewModel or DirectLineMeasurement3DViewModel
          * but there is an inconsistency in the Esri Widget View Model pattern with 
@@ -77,7 +104,7 @@ export default class CreateDirectLineMeasurement3D implements IActivityHandler {
             unit: linearUnit as any,
 
         });
-        let remove: removeFunction | undefined = () => measurementWidget.destroy();
+        let remove: (() => void) | undefined = () => measurementWidget.destroy();
         try {
             measurementWidget.viewModel.start();
             measurement = await new Promise((resolve) => {
@@ -98,7 +125,7 @@ export default class CreateDirectLineMeasurement3D implements IActivityHandler {
                 mapView.container.ownerDocument?.removeEventListener("keydown", keyDown);
             }
             //If there is no measurement to be returned then destroy the widget            
-            if(!measurement) {
+            if (!measurement) {
                 remove();
                 remove = undefined;
             }

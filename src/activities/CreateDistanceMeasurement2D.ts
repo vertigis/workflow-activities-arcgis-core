@@ -8,29 +8,25 @@ import { activate } from "@geocortex/workflow/runtime/Hooks";
 import DistanceMeasurement2D from "@arcgis/core/widgets/DistanceMeasurement2D";
 import MapView from "@arcgis/core/views/MapView";
 
-type removeFunction = () => void;
-type linearMeasurementUnits = "metric" | "imperial" | "inches" | "feet" | "us-feet" | "yards" | "miles" | "nautical-miles" | "meters" | "kilometers";
-type DistanceMeasurement2DResult = {
-    length: number;
-    geometry: any;
-}
-
 export interface CreateDistanceMeasurement2DInputs {
     /**
      * @description Unit system (imperial or metric) or specific unit used for distance values.
      */
-    linearUnit?: linearMeasurementUnits | string;
+    linearUnit?: "metric" | "imperial" | "inches" | "feet" | "us-feet" | "yards" | "miles" | "nautical-miles" | "meters" | "kilometers" | string;
 
 }
 
 export interface CreateDistanceMeasurement2DOutputs {
 
-    measurement: DistanceMeasurement2DResult | undefined;
+    measurement?: {
+        length: number;
+        geometry: any;
+    };
 
     /**
      * @description Function that removes the measurement from the map.
      */
-    remove: removeFunction | undefined;
+    remove?: () => void;
 }
 
 /**
@@ -57,7 +53,10 @@ export default class CreateDistanceMeasurement2D implements IActivityHandler {
 
         const mapView = mapProvider.view as MapView;
         let keyDown: ((event: KeyboardEvent) => void) | undefined;
-        let measurement: DistanceMeasurement2DResult | undefined;
+        let measurement: {
+            length: number;
+            geometry: any;
+        } | undefined;
 
         /**
          * Ideally this would be implemented using AreaMeasurement2DViewModel or DistanceMeasurement2DViewModel
@@ -69,7 +68,7 @@ export default class CreateDistanceMeasurement2D implements IActivityHandler {
             view: mapView,
             unit: linearUnit as any,
         });
-        let remove: removeFunction | undefined = () => measurementWidget.destroy();
+        let remove: (() => void) | undefined = () => measurementWidget.destroy();
         try {
             measurementWidget.viewModel.start();
             measurement = await new Promise((resolve) => {
@@ -91,7 +90,7 @@ export default class CreateDistanceMeasurement2D implements IActivityHandler {
                 mapView.container.ownerDocument?.removeEventListener("keydown", keyDown);
             }
             //If there is no measurement to be returned then destroy the widget            
-            if(!measurement) {
+            if (!measurement) {
                 remove();
                 remove = undefined;
             }
