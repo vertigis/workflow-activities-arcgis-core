@@ -7,7 +7,19 @@ import { MapProvider } from "@geocortex/workflow/runtime/activities/arcgis/MapPr
 import { activate } from "@geocortex/workflow/runtime/Hooks";
 import AreaMeasurement3D from "@arcgis/core/widgets/AreaMeasurement3D";
 import SceneView from "@arcgis/core/views/SceneView";
-import { removeFunction, areaMeasurementUnits, AreaMeasurement3DResult } from "../types";
+type removeFunction = () => void;
+type areaMeasurementUnits = "metric" | "imperial" | "square-inches" | "square-feet" | "square-us-feet" | "square-yards" | "square-miles" | "square-meters" | "square-kilometers" | "acres" | "ares" | "hectares";
+type AreaMeasurement3DResult = {
+    mode: "euclidean" | "geodesic";
+    area: {
+        text: string;
+        state: string;
+    };
+    perimeterLength: {
+        text: string;
+        state: string;
+    };
+}
 
 /** An interface that defines the inputs of the activity. */
 interface CreateAreaMeasurement3DInputs {
@@ -19,11 +31,11 @@ interface CreateAreaMeasurement3DInputs {
 
 interface CreateAreaMeasurement3DOutputs {
 
-    measurement: AreaMeasurement3DResult | undefined;
+    measurement?: AreaMeasurement3DResult;
     /**
      * @description Function that removes the measurement from the map.
      */
-    remove: removeFunction | undefined;
+    remove?: removeFunction;
 
 }
 
@@ -31,7 +43,7 @@ interface CreateAreaMeasurement3DOutputs {
  * @category ArcGIS Maps SDK for JavaScript
  * @clientOnly
  * @defaultName measure
- * @description Measure a distance or area on a 3D map.
+ * @description Measure an area on a 3D map.
  * @helpUrl https://developers.arcgis.com/javascript/latest/sample-code/widgets-measurement-3d
  * @supportedApps EXB, GWV
  */

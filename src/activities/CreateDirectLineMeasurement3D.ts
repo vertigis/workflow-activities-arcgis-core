@@ -7,7 +7,23 @@ import { MapProvider } from "@geocortex/workflow/runtime/activities/arcgis/MapPr
 import { activate } from "@geocortex/workflow/runtime/Hooks";
 import DirectLineMeasurement3D from "@arcgis/core/widgets/DirectLineMeasurement3D";
 import SceneView from "@arcgis/core/views/SceneView";
-import { removeFunction, linearMeasurementUnits, DirectLineMeasurement3DResult } from "../types";
+type removeFunction = () => void;
+type linearMeasurementUnits = "metric" | "imperial" | "inches" | "feet" | "us-feet" | "yards" | "miles" | "nautical-miles" | "meters" | "kilometers";
+type DirectLineMeasurement3DResult = {
+    measurementMode: "euclidean" | "geodesic";
+    directDistance: {
+        text: string;
+        state: string;
+    };
+    horizontalDistance: {
+        text: string;
+        state: string;
+    };
+    verticalDistance: {
+        text: string;
+        state: string;
+    };
+}
 
 /** An interface that defines the inputs of the activity. */
 interface CreateDirectLineMeasurement3DInputs {
@@ -20,11 +36,11 @@ interface CreateDirectLineMeasurement3DInputs {
 
 interface CreateDirectLineMeasurement3DOutputs {
 
-    measurement: DirectLineMeasurement3DResult | undefined;
+    measurement?: DirectLineMeasurement3DResult;
     /**
      * @description Function that removes the measurement from the map.
      */
-    remove: removeFunction | undefined;
+    remove?: removeFunction;
 
 }
 
@@ -32,7 +48,7 @@ interface CreateDirectLineMeasurement3DOutputs {
  * @category ArcGIS Maps SDK for JavaScript
  * @clientOnly
  * @defaultName measure
- * @description Measure a distance or area on a 3D map.
+ * @description Measure a distance on a 3D map.
  * @helpUrl https://developers.arcgis.com/javascript/latest/sample-code/widgets-measurement-3d
  * @supportedApps EXB, GWV
  */

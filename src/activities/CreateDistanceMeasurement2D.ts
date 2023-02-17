@@ -7,8 +7,13 @@ import { MapProvider } from "@geocortex/workflow/runtime/activities/arcgis/MapPr
 import { activate } from "@geocortex/workflow/runtime/Hooks";
 import DistanceMeasurement2D from "@arcgis/core/widgets/DistanceMeasurement2D";
 import MapView from "@arcgis/core/views/MapView";
-import { removeFunction, linearMeasurementUnits, DistanceMeasurement2DResult} from "../types";
 
+type removeFunction = () => void;
+type linearMeasurementUnits = "metric" | "imperial" | "inches" | "feet" | "us-feet" | "yards" | "miles" | "nautical-miles" | "meters" | "kilometers";
+type DistanceMeasurement2DResult = {
+    length: number;
+    geometry: any;
+}
 
 export interface CreateDistanceMeasurement2DInputs {
     /**
@@ -32,7 +37,7 @@ export interface CreateDistanceMeasurement2DOutputs {
  * @category ArcGIS Maps SDK for JavaScript
  * @clientOnly
  * @defaultName measure
- * @description Measure a distance or area on a 2D map.
+ * @description Measure a distance on a 2D map.
  * @helpUrl https://developers.arcgis.com/javascript/latest/sample-code/widgets-measurement-2d
  * @supportedApps EXB, GWV
  */

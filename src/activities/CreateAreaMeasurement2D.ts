@@ -7,22 +7,29 @@ import { MapProvider } from "@geocortex/workflow/runtime/activities/arcgis/MapPr
 import { activate } from "@geocortex/workflow/runtime/Hooks";
 import AreaMeasurement2D from "@arcgis/core/widgets/AreaMeasurement2D";
 import MapView from "@arcgis/core/views/MapView";
-import { removeFunction, linearMeasurementUnits, AreaMeasurement2DResult } from "../types";
+type removeFunction = () => void;
+type areaMeasurementUnits = "metric" | "imperial" | "square-inches" | "square-feet" | "square-us-feet" | "square-yards" | "square-miles" | "square-meters" | "square-kilometers" | "acres" | "ares" | "hectares";
+type AreaMeasurement2DResult = {
+    area: number;
+    perimeter: number;
+    geometry: any;
+}
+
 export interface CreateAreaMeasurement2DInputs {
     /**
      * @description Unit system (imperial or metric) or specific unit used for area values.
      */
-    areaUnit?: linearMeasurementUnits | string;
+    areaUnit?: areaMeasurementUnits | string;
 
 }
 
 export interface CreateAreaMeasurementOutputs {
-    measurement: AreaMeasurement2DResult | undefined;
+    measurement?: AreaMeasurement2DResult;
 
     /**
      * @description Function that removes the measurement from the map.
      */
-    remove: removeFunction | undefined;
+    remove?: removeFunction;
 }
 
 /**
