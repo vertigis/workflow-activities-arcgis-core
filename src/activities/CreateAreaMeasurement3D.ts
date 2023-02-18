@@ -57,17 +57,8 @@ export default class CreateAreaMeasurement3D implements IActivityHandler {
         }
         const mapView = mapProvider.view as SceneView;
         let keyDown: ((event: KeyboardEvent) => void) | undefined;
-        let measurement: {
-            mode: "euclidean" | "geodesic";
-            area: {
-                text: string;
-                state: string;
-            };
-            perimeterLength: {
-                text: string;
-                state: string;
-            };
-        } | undefined;
+        let measurement: __esri.AreaMeasurement3DViewModelMeasurement | undefined;
+        let watchHandle: __esri.WatchHandle | undefined;
 
         /**
          * Ideally this would be implemented using AreaMeasurement3DViewModel or DirectLineMeasurement3DViewModel
@@ -84,7 +75,7 @@ export default class CreateAreaMeasurement3D implements IActivityHandler {
         try {
             measurementWidget.viewModel.start();
             measurement = await new Promise((resolve) => {
-                measurementWidget.watch("viewModel.state", function (state: string) {
+                watchHandle = measurementWidget.watch("viewModel.state", function (state: string) {
                     if (state === "measured") {
                         resolve(measurementWidget.viewModel.measurement);
                     }
@@ -106,6 +97,8 @@ export default class CreateAreaMeasurement3D implements IActivityHandler {
                 remove();
                 remove = undefined;
             }
+            watchHandle?.remove();
+
         }
         return {
             measurement,

@@ -53,11 +53,8 @@ export default class CreateDistanceMeasurement2D implements IActivityHandler {
 
         const mapView = mapProvider.view as MapView;
         let keyDown: ((event: KeyboardEvent) => void) | undefined;
-        let measurement: {
-            length: number;
-            geometry: any;
-        } | undefined;
-
+        let measurement: __esri.DistanceMeasurement2DViewModelMeasurement | undefined;
+        let watchHandle: __esri.WatchHandle | undefined;
         /**
          * Ideally this would be implemented using AreaMeasurement2DViewModel or DistanceMeasurement2DViewModel
          * but there is an inconsistency in the Esri Widget View Model pattern with 
@@ -72,7 +69,7 @@ export default class CreateDistanceMeasurement2D implements IActivityHandler {
         try {
             measurementWidget.viewModel.start();
             measurement = await new Promise((resolve) => {
-                measurementWidget.watch("viewModel.state", function (state: string) {
+                watchHandle = measurementWidget.watch("viewModel.state", function (state: string) {
                     if (state === "measured") {
                         resolve(measurementWidget.viewModel.measurement);
                     }
@@ -94,6 +91,7 @@ export default class CreateDistanceMeasurement2D implements IActivityHandler {
                 remove();
                 remove = undefined;
             }
+            watchHandle?.remove();
         }
 
         return {

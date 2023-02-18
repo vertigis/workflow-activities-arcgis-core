@@ -7,22 +7,6 @@ import { MapProvider } from "@geocortex/workflow/runtime/activities/arcgis/MapPr
 import { activate } from "@geocortex/workflow/runtime/Hooks";
 import DirectLineMeasurement3D from "@arcgis/core/widgets/DirectLineMeasurement3D";
 import SceneView from "@arcgis/core/views/SceneView";
-type removeFunction = (() => void);
-type DirectLineMeasurement3DResult = {
-    measurementMode: "euclidean" | "geodesic";
-    directDistance: {
-        text: string;
-        state: string;
-    };
-    horizontalDistance: {
-        text: string;
-        state: string;
-    };
-    verticalDistance: {
-        text: string;
-        state: string;
-    };
-}
 
 /** An interface that defines the inputs of the activity. */
 interface CreateDirectLineMeasurement3DInputs {
@@ -78,21 +62,9 @@ export default class CreateDirectLineMeasurement3D implements IActivityHandler {
         }
         const mapView = mapProvider.view as SceneView;
         let keyDown: ((event: KeyboardEvent) => void) | undefined;
-        let measurement: {
-            measurementMode: "euclidean" | "geodesic";
-            directDistance: {
-                text: string;
-                state: string;
-            };
-            horizontalDistance: {
-                text: string;
-                state: string;
-            };
-            verticalDistance: {
-                text: string;
-                state: string;
-            };
-        } | undefined;
+        let measurement: __esri.DirectLineMeasurement3DViewModelMeasurement | undefined;
+        let watchHandle: __esri.WatchHandle | undefined;
+
         /**
          * Ideally this would be implemented using AreaMeasurement3DViewModel or DirectLineMeasurement3DViewModel
          * but there is an inconsistency in the Esri Widget View Model pattern with 
@@ -108,7 +80,7 @@ export default class CreateDirectLineMeasurement3D implements IActivityHandler {
         try {
             measurementWidget.viewModel.start();
             measurement = await new Promise((resolve) => {
-                measurementWidget.watch("viewModel.state", function (state: string) {
+                watchHandle = measurementWidget.watch("viewModel.state", function (state: string) {
                     if (state === "measured") {
                         resolve(measurementWidget.viewModel.measurement);
                     }
@@ -129,6 +101,7 @@ export default class CreateDirectLineMeasurement3D implements IActivityHandler {
                 remove();
                 remove = undefined;
             }
+            watchHandle?.remove();
         }
         return {
             measurement,
