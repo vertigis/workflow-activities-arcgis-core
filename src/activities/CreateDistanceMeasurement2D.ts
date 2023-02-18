@@ -52,7 +52,6 @@ export default class CreateDistanceMeasurement2D implements IActivityHandler {
         }
 
         const mapView = mapProvider.view as MapView;
-        let measurement: __esri.DistanceMeasurement2DViewModelMeasurement | undefined;
         let watchHandle: __esri.WatchHandle | undefined;
         /**
          * Ideally this would be implemented using AreaMeasurement2DViewModel or DistanceMeasurement2DViewModel
@@ -64,10 +63,9 @@ export default class CreateDistanceMeasurement2D implements IActivityHandler {
             view: mapView,
             unit: linearUnit as any,
         });
-        let remove: (() => void) | undefined = () => measurementWidget.destroy();
-        try {
-            measurementWidget.viewModel.start();
-            measurement = await new Promise((resolve) => {
+        measurementWidget.viewModel.start();
+        const measurement: __esri.DistanceMeasurement2DViewModelMeasurement | undefined
+            = await new Promise((resolve) => {
                 watchHandle = measurementWidget.watch("viewModel.state", function (state: string) {
                     if (state === "measured") {
                         resolve(measurementWidget.viewModel.measurement);
@@ -78,19 +76,12 @@ export default class CreateDistanceMeasurement2D implements IActivityHandler {
 
 
             });
-        } finally {
-            //If there is no measurement to be returned then destroy the widget            
-            if (!measurement) {
-                remove();
-                remove = undefined;
-            }
-            watchHandle?.remove();
-        }
-
+        watchHandle?.remove();
+        const remove = measurementWidget.destroyed ? () => { return } : () => measurementWidget.destroy();
         return {
             measurement,
             remove,
         };
-
+        measurementWidget.destroy();
     }
 }
