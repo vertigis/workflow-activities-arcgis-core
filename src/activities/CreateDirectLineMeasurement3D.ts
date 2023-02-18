@@ -61,7 +61,6 @@ export default class CreateDirectLineMeasurement3D implements IActivityHandler {
             throw new Error("map view is required");
         }
         const mapView = mapProvider.view as SceneView;
-        let keyDown: ((event: KeyboardEvent) => void) | undefined;
         let measurement: __esri.DirectLineMeasurement3DViewModelMeasurement | undefined;
         let watchHandle: __esri.WatchHandle | undefined;
 
@@ -83,19 +82,12 @@ export default class CreateDirectLineMeasurement3D implements IActivityHandler {
                 watchHandle = measurementWidget.watch("viewModel.state", function (state: string) {
                     if (state === "measured") {
                         resolve(measurementWidget.viewModel.measurement);
-                    }
-                });
-                keyDown = (event: KeyboardEvent) => {
-                    if (event.key === "ESC" || event.key === "Escape") {
+                    } else if (state === "ready") {
                         resolve(undefined);
                     }
-                };
-                mapView.container.ownerDocument?.addEventListener("keydown", keyDown);
+                });
             });
         } finally {
-            if (keyDown) {
-                mapView.container.ownerDocument?.removeEventListener("keydown", keyDown);
-            }
             //If there is no measurement to be returned then destroy the widget            
             if (!measurement) {
                 remove();
