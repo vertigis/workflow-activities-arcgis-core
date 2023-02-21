@@ -17,6 +17,9 @@ interface CreateDistanceMeasurement2DInputs {
 }
 
 interface CreateDistanceMeasurement2DOutputs {
+    /**
+     * @description The length the measurement polyline in meters.
+     */
     length?: number;
     geometry?: __esri.Polyline;
 }

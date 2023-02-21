@@ -17,8 +17,15 @@ interface CreateAreaMeasurement2DInputs {
 }
 
 interface CreateAreaMeasurementOutputs {
+    /**
+     * @description The area of the measurement polygon in square meters.
+     */
     area?: number;
+    /**
+     * @description The perimeter of the measurement polygon in meters.
+     */
     perimeter?: number;
+
     geometry?: __esri.Polygon;
 }
 
