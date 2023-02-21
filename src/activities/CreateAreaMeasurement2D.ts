@@ -19,7 +19,7 @@ interface CreateAreaMeasurement2DInputs {
 interface CreateAreaMeasurementOutputs {
     area?: number;
     perimeter?: number;
-    geometry?: any;
+    geometry?: __esri.Polygon;
 }
 
 /**
@@ -70,9 +70,7 @@ export default class CreateAreaMeasurement2D implements IActivityHandler {
         watchHandle?.remove();
         measurementWidget.destroy();
         return {
-            area: measurement?.area,
-            perimeter: measurement?.perimeter,
-            geometry: measurement?.geometry,
+            ...measurement,
         }
     }
 }

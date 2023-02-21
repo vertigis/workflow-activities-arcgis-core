@@ -83,10 +83,7 @@ export default class CreateDirectLineMeasurement3D implements IActivityHandler {
         measurementWidget.destroy();
 
         return {
-            measurementMode: measurement?.measurementMode,
-            directDistance: measurement?.directDistance,
-            horizontalDistance: measurement?.horizontalDistance,
-            verticalDistance: measurement?.verticalDistance,
+          ...measurement,
         };
     }
 }

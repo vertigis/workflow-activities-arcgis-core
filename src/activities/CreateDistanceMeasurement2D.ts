@@ -18,7 +18,7 @@ interface CreateDistanceMeasurement2DInputs {
 
 interface CreateDistanceMeasurement2DOutputs {
     length?: number;
-    geometry?: any;
+    geometry?: __esri.Polyline;
 }
 
 /**
@@ -72,8 +72,7 @@ export default class CreateDistanceMeasurement2D implements IActivityHandler {
         measurementWidget.destroy();
        
         return {
-            length: measurement?.length,
-            geometry: measurement?.geometry,
+            ...measurement,
         };
     }
 }

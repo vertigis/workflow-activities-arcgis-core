@@ -79,9 +79,7 @@ export default class CreateAreaMeasurement3D implements IActivityHandler {
         measurementWidget.destroy();
 
         return {
-            mode: measurement?.mode,
-            area: measurement?.area,
-            perimeterLength: measurement?.perimeterLength,
+            ...measurement,
         };
     }
 }
