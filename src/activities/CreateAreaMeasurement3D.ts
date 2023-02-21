@@ -18,21 +18,15 @@ interface CreateAreaMeasurement3DInputs {
 
 interface CreateAreaMeasurement3DOutputs {
 
-    measurement?: {
-        mode: "euclidean" | "geodesic";
-        area: {
-            text: string;
-            state: string;
-        };
-        perimeterLength: {
-            text: string;
-            state: string;
-        };
+    mode?: "euclidean" | "geodesic";
+    area?: {
+        text: string;
+        state: string;
     };
-    /**
-     * @description Function that removes the measurement from the map.
-     */
-    remove?: () => void;
+    perimeterLength?: {
+        text: string;
+        state: string;
+    };
 
 }
 
@@ -82,10 +76,12 @@ export default class CreateAreaMeasurement3D implements IActivityHandler {
 
             });
         watchHandle?.remove();
-        const remove = measurementWidget.destroyed ? () => { return } : () => measurementWidget.destroy();
+        measurementWidget.destroy();
+
         return {
-            measurement,
-            remove,
+            mode: measurement?.mode,
+            area: measurement?.area,
+            perimeterLength: measurement?.perimeterLength,
         };
     }
 }

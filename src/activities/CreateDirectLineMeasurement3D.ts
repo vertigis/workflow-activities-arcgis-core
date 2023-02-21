@@ -19,26 +19,19 @@ interface CreateDirectLineMeasurement3DInputs {
 
 interface CreateDirectLineMeasurement3DOutputs {
 
-    measurement?: {
-        measurementMode: "euclidean" | "geodesic";
-        directDistance: {
-            text: string;
-            state: string;
-        };
-        horizontalDistance: {
-            text: string;
-            state: string;
-        };
-        verticalDistance: {
-            text: string;
-            state: string;
-        };
+    measurementMode?: "euclidean" | "geodesic";
+    directDistance?: {
+        text: string;
+        state: string;
     };
-    /**
-     * @description Function that removes the measurement from the map.
-     */
-    remove?: () => void;
-
+    horizontalDistance?: {
+        text: string;
+        state: string;
+    };
+    verticalDistance?: {
+        text: string;
+        state: string;
+    };
 }
 
 /**
@@ -87,10 +80,13 @@ export default class CreateDirectLineMeasurement3D implements IActivityHandler {
                 });
             });
         watchHandle?.remove();
-        const remove = measurementWidget.destroyed ? () => { return } : () => measurementWidget.destroy();
+        measurementWidget.destroy();
+
         return {
-            measurement,
-            remove,
+            measurementMode: measurement?.measurementMode,
+            directDistance: measurement?.directDistance,
+            horizontalDistance: measurement?.horizontalDistance,
+            verticalDistance: measurement?.verticalDistance,
         };
     }
 }

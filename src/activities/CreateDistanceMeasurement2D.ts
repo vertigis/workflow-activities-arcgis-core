@@ -8,7 +8,7 @@ import { activate } from "@geocortex/workflow/runtime/Hooks";
 import DistanceMeasurement2D from "@arcgis/core/widgets/DistanceMeasurement2D";
 import MapView from "@arcgis/core/views/MapView";
 
-export interface CreateDistanceMeasurement2DInputs {
+interface CreateDistanceMeasurement2DInputs {
     /**
      * @description Unit system (imperial or metric) or specific unit used for distance values.
      */
@@ -16,17 +16,9 @@ export interface CreateDistanceMeasurement2DInputs {
 
 }
 
-export interface CreateDistanceMeasurement2DOutputs {
-
-    measurement?: {
-        length: number;
-        geometry: any;
-    };
-
-    /**
-     * @description Function that removes the measurement from the map.
-     */
-    remove?: () => void;
+interface CreateDistanceMeasurement2DOutputs {
+    length?: number;
+    geometry?: any;
 }
 
 /**
@@ -77,11 +69,11 @@ export default class CreateDistanceMeasurement2D implements IActivityHandler {
 
             });
         watchHandle?.remove();
-        const remove = measurementWidget.destroyed ? () => { return } : () => measurementWidget.destroy();
-        return {
-            measurement,
-            remove,
-        };
         measurementWidget.destroy();
+       
+        return {
+            length: measurement?.length,
+            geometry: measurement?.geometry,
+        };
     }
 }

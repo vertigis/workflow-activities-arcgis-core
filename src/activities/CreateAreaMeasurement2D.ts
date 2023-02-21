@@ -8,7 +8,7 @@ import { activate } from "@geocortex/workflow/runtime/Hooks";
 import AreaMeasurement2D from "@arcgis/core/widgets/AreaMeasurement2D";
 import MapView from "@arcgis/core/views/MapView";
 
-export interface CreateAreaMeasurement2DInputs {
+interface CreateAreaMeasurement2DInputs {
     /**
      * @description Unit system (imperial or metric) or specific unit used for area values.
      */
@@ -16,17 +16,10 @@ export interface CreateAreaMeasurement2DInputs {
 
 }
 
-export interface CreateAreaMeasurementOutputs {
-    measurement?: {
-        area: number;
-        perimeter: number;
-        geometry: any;
-    };
-
-    /**
-     * @description Function that removes the measurement from the map.
-     */
-    remove?: () => void;
+interface CreateAreaMeasurementOutputs {
+    area?: number;
+    perimeter?: number;
+    geometry?: any;
 }
 
 /**
@@ -75,12 +68,11 @@ export default class CreateAreaMeasurement2D implements IActivityHandler {
                 });
             });
         watchHandle?.remove();
-        const remove = measurementWidget.destroyed ? () => { return } : () => measurementWidget.destroy();
-
+        measurementWidget.destroy();
         return {
-            measurement,
-            remove,
-        };
-
+            area: measurement?.area,
+            perimeter: measurement?.perimeter,
+            geometry: measurement?.geometry,
+        }
     }
 }
