@@ -55,7 +55,7 @@ interface UpdateSketchOutputs {
 export default class UpdateSketch implements IActivityHandler {
     async execute(inputs: UpdateSketchInputs, context: IActivityContext,
         type: typeof MapProvider): Promise<UpdateSketchOutputs> {
-        const { graphics, layer, symbol } = inputs;
+        const { graphics, layer, symbol, updateOptions } = inputs;
         const mapProvider = type.create();
         await mapProvider.load();
         if (!mapProvider.view) {
@@ -91,7 +91,7 @@ export default class UpdateSketch implements IActivityHandler {
             }
         }
 
-        await view.update(graphics);
+        await view.update(graphics, updateOptions);
         updatedGraphics = await new Promise((resolve) => {
             view.on("update", function (event) {
                 if (event.state === "complete") {
