@@ -19,12 +19,12 @@ export interface TakeScreenshotInputs {
     height: number;
 
     /**
-     * @description The format of the resulting encoded data URL.
+     * @description The format of the resulting encoded data URL. The default is png.
      */
     format?: "png" | "jpg" | string;
 
     /**
-     * @description The quality (0 to 100) of the encoded image when encoding as `jpg`.
+     * @description The quality (0 to 100) of the encoded image when the format is jpg. The default is 98.
      */
     quality?: number;
 
@@ -35,6 +35,8 @@ export interface TakeScreenshotInputs {
 
     /**
      * @description Specifies whether to take a screenshot of a specific area of the view.
+     * The area coordinates are relative to the origin of the padded view and will be clipped to the view size. 
+     * Defaults to the whole view (padding excluded).
      */
     area?: {
         /**
@@ -56,12 +58,12 @@ export interface TakeScreenshotInputs {
     };
 
     /**
-     * @description Indicates whether to ignore the background color set in the initial view properties.
+     * @description Indicates whether to ignore the background color set in the initial view properties. The default is false.
      */
     ignoreBackground?: boolean;
 
     /**
-     * @description Indicates whether view padding should be ignored.
+     * @description Indicates whether the view padding should be ignored. The default is false.
      */
     ignorePadding?: boolean;
 }
