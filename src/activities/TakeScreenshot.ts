@@ -77,7 +77,7 @@ export interface TakeScreenshotOutputs {
     /**
      * @description The raw RGBA image data.
      */
-    data: __esri.Screenshot["data"];
+    data: any;
 }
 
 /**
