@@ -70,9 +70,14 @@ export interface TakeScreenshotInputs {
 
 export interface TakeScreenshotOutputs {
     /**
-     * A data url representing the screenshot.
+     * @description A data url representing the screenshot.
      */
     dataUrl: string;
+
+    /**
+     * @description The raw RGBA image data.
+     */
+    data: __esri.Screenshot["data"];
 }
 
 /**
