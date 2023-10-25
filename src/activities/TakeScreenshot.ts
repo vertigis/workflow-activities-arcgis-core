@@ -90,7 +90,7 @@ export default class TakeScreenshot implements IActivityHandler {
     ): Promise<TakeScreenshotOutputs> {
         const mapProvider = type.create();
         await mapProvider.load();
-        
+
         if (!mapProvider.map) {
             throw new Error("map is required");
         }
@@ -102,11 +102,12 @@ export default class TakeScreenshot implements IActivityHandler {
 
         await mapView.when();
 
-        const screenshot = await mapView.takeScreenshot(inputs as __esri.MapViewTakeScreenshotOptions);
+        const screenshot = await mapView.takeScreenshot(
+            inputs as __esri.MapViewTakeScreenshotOptions
+        );
 
         return {
             ...screenshot,
         };
-
     }
 }
