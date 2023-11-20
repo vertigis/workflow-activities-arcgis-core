@@ -9,7 +9,6 @@ import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel";
 import Graphic from "@arcgis/core/Graphic";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import { Symbol } from "@arcgis/core/symbols";
-
 import MapView from "@arcgis/core/views/MapView";
 import SketchDefaults from "./SketchDefaults";
 
@@ -37,6 +36,8 @@ interface UpdateSketchInputs {
      * @link https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Sketch-SketchViewModel.html#update
      */
     updateOptions?: __esri.SketchViewModelDefaultUpdateOptions;
+
+    disableMove?: boolean
 }
 
 interface UpdateSketchOutputs {
@@ -55,8 +56,9 @@ interface UpdateSketchOutputs {
 export default class UpdateSketch implements IActivityHandler {
     async execute(inputs: UpdateSketchInputs, context: IActivityContext,
         type: typeof MapProvider): Promise<UpdateSketchOutputs> {
-        const { graphics, layer, symbol, updateOptions } = inputs;
+        const { graphics, layer, symbol, updateOptions, disableMove} = inputs;
         const mapProvider = type.create();
+        let moveAborted = false;
         await mapProvider.load();
         if (!mapProvider.view) {
             throw new Error("view is required");
@@ -94,12 +96,22 @@ export default class UpdateSketch implements IActivityHandler {
         await view.update(graphics, updateOptions);
         updatedGraphics = await new Promise((resolve) => {
             view.on("update", function (event) {
-                if (event.state === "complete") {
-                    resolve(event.graphics);
-                } else if (event.aborted) {
-                    resolve(undefined);
+                if (disableMove && event.toolEventInfo && event.toolEventInfo.type.includes("move-start")){
+                    event.aborted = true;
+                    moveAborted = true;
+                    void view.update(event.graphics, updateOptions);
+                } else if(!moveAborted) {
+                    moveAborted = false;
+                    if (event.state === "complete") {
+                        resolve(event.graphics);
+                    } else if (event.aborted) {
+                        resolve(undefined);
+                    }
+     
                 }
+                moveAborted = false;
 
+               
             });
         });
 

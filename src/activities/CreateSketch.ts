@@ -102,6 +102,11 @@ export default class CreateSketch implements IActivityHandler {
                     view.polylineSymbol = symbol;
             }
         } 
+        view.on("update", function (event) {
+            if (event.toolEventInfo && event.toolEventInfo.type.includes("move-start")){
+                view.cancel();
+            }
+        });
         view.create(sketchType as any, createOptions);
         const output: Graphic | undefined = await new Promise((resolve) => {
             view.on("create", function (event) {
@@ -111,6 +116,8 @@ export default class CreateSketch implements IActivityHandler {
                     resolve(undefined);
                 }
             });
+
+           
         });
         view.destroy();        
         return {
