@@ -96,6 +96,7 @@ export default class UpdateSketch implements IActivityHandler {
         await view.update(graphics, updateOptions);
         updatedGraphics = await new Promise((resolve) => {
             view.on("update", function (event) {
+                //prevents the user from moving the geometry
                 if (disableMove && event.toolEventInfo && event.toolEventInfo.type.includes("move-start")){
                     event.aborted = true;
                     moveAborted = true;
