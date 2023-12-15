@@ -9,5 +9,6 @@ export { default as CreateLayerFromPortalItem } from "./activities/CreateLayerFr
 export { default as CreateSketch } from "./activities/CreateSketch";
 export { default as SelectGraphics } from "./activities/SelectGraphics";
 export { default as SendRequest } from "./activities/SendRequest";
+export { default as SetGlobalProperty } from "./activities/SetGlobalProperty";
 export { default as TakeScreenshot } from "./activities/TakeScreenshot";
 export { default as UpdateSketch } from "./activities/UpdateSketch";
