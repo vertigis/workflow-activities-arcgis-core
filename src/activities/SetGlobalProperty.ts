@@ -28,7 +28,7 @@ interface SetGlobalPropertyOutputs {}
  * @category ArcGIS Maps SDK for JavaScript
  * @clientOnly
  * @description Configure global properties of the ArcGIS Maps SDK for JavaScript library.
- * @helpUrl https://developers.arcgis.com/javascript/latest/api-reference/esri-config.htm
+ * @helpUrl https://developers.arcgis.com/javascript/latest/api-reference/esri-config.html
  * @supportedApps EXB, GWV
  */
 export default class SetGlobalProperty implements IActivityHandler {
