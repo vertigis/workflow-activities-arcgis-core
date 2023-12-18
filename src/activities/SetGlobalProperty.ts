@@ -10,8 +10,8 @@ interface SetGlobalPropertyInputs {
     name:
         | "apiKey"
         | "fontsUrl"
-        | "geoRSSServiceUrl"
         | "geometryServiceUrl"
+        | "geoRSSServiceUrl"
         | "kmlServiceUrl"
         | "routeServiceUrl";
 
@@ -48,9 +48,9 @@ export default class SetGlobalProperty implements IActivityHandler {
         switch (prop) {
             case "apiKey":
             case "fontsUrl":
-            case "kmlServiceUrl":
             case "geometryServiceUrl":
             case "geoRSSServiceUrl":
+            case "kmlServiceUrl":
             case "routeServiceUrl":
                 config[name] = value;
                 break;
