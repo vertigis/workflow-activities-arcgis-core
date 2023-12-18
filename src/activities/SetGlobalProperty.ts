@@ -49,8 +49,8 @@ export default class SetGlobalProperty implements IActivityHandler {
             case "apiKey":
             case "fontsUrl":
             case "kmlServiceUrl":
-            case "geoRSSServiceUrl":
             case "geometryServiceUrl":
+            case "geoRSSServiceUrl":
             case "routeServiceUrl":
                 config[name] = value;
                 break;
