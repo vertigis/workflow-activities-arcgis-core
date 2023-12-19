@@ -39,7 +39,7 @@ export default class RegisterToken implements IActivityHandler {
             throw new Error("server must use the https:// protocol");
         }
         if (!token) {
-            throw new Error("server is required");
+            throw new Error("token is required");
         }
 
         IdentityManager.registerToken({
