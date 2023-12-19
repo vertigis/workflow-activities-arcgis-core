@@ -7,6 +7,7 @@ export { default as CreateDistanceMeasurement2D } from "./activities/CreateDista
 export { default as CreateLayerFromArcGisServerUrl } from "./activities/CreateLayerFromArcGisServerUrl";
 export { default as CreateLayerFromPortalItem } from "./activities/CreateLayerFromPortalItem";
 export { default as CreateSketch } from "./activities/CreateSketch";
+export { default as RegisterToken } from "./activities/RegisterToken";
 export { default as SelectGraphics } from "./activities/SelectGraphics";
 export { default as SendRequest } from "./activities/SendRequest";
 export { default as SetGlobalProperty } from "./activities/SetGlobalProperty";
