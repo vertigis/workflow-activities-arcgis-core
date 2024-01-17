@@ -10,10 +10,14 @@ import SceneView from "@arcgis/core/views/SceneView";
 
 /** An interface that defines the inputs of the activity. */
 interface CreateAreaMeasurement3DInputs {
+    /* eslint-disable @typescript-eslint/no-redundant-type-constituents */
+
     /**
      * @description Unit system (imperial or metric) or specific unit used for area values.
      */
     areaUnit?: "metric" | "imperial" | "square-inches" | "square-feet" | "square-us-feet" | "square-yards" | "square-miles" | "square-meters" | "square-kilometers" | "acres" | "ares" | "hectares" | string;
+    
+    /* eslint-enable @typescript-eslint/no-redundant-type-constituents */
 }
 
 interface CreateAreaMeasurement3DOutputs {

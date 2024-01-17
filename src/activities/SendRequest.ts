@@ -2,6 +2,8 @@ import type { IActivityHandler } from "@vertigis/workflow";
 import request from "@arcgis/core/request";
 
 interface SendRequestInputs {
+    /* eslint-disable @typescript-eslint/no-redundant-type-constituents */
+
     /**
      * @displayName URL
      * @description The request URL.
@@ -52,6 +54,8 @@ interface SendRequestInputs {
      * @description Indicates if cross-site `Access-Control` requests should use credentials.
      */
     withCredentials?: boolean;
+    
+    /* eslint-enable @typescript-eslint/no-redundant-type-constituents */
 }
 
 interface SendRequestOutputs {

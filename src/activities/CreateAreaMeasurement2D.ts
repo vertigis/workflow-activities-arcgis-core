@@ -9,11 +9,14 @@ import AreaMeasurement2D from "@arcgis/core/widgets/AreaMeasurement2D";
 import MapView from "@arcgis/core/views/MapView";
 
 interface CreateAreaMeasurement2DInputs {
+    /* eslint-disable @typescript-eslint/no-redundant-type-constituents */
+
     /**
      * @description Unit system (imperial or metric) or specific unit used for area values.
      */
     areaUnit?: "metric" | "imperial" | "square-inches" | "square-feet" | "square-us-feet" | "square-yards" | "square-miles" | "square-meters" | "square-kilometers" | "acres" | "ares" | "hectares" | string;
 
+    /* eslint-enable @typescript-eslint/no-redundant-type-constituents */
 }
 
 interface CreateAreaMeasurementOutputs {
