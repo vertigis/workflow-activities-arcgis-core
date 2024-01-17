@@ -7,11 +7,11 @@ This project contains activities for interacting with the [ArcGIS Maps SDK for J
 
 ### VertiGIS Studio Workflow Versions
 
-These activities are designed to work with VertiGIS Studio Workflow versions `5.30.1` and above.
+These activities are designed to work with VertiGIS Studio Workflow versions `5.31` and above.
 
 ### ArcGIS Maps SDK for JavaScript Versions
 
-These activities depend on the ArcGIS Maps SDK for JavaScript version `4.21` or above to be present in the host application.
+These activities depend on the ArcGIS Maps SDK for JavaScript version `4.28` or above to be present in the host application.
 
 ## Usage
 To use these activities in [VertiGIS Studio Workflow Designer](https://apps.vertigisstudio.com/workflow/designer/) you need to register an activity pack and then add the activities to a workflow.
