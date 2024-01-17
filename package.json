@@ -27,15 +27,15 @@
         "start": "vertigis-workflow-sdk start"
     },
     "dependencies": {
-        "@arcgis/core": "^4.25.5"
+        "@arcgis/core": "^4.28.10"
     },
     "devDependencies": {
-        "@geocortex/workflow": "5.30.1",
-        "@vertigis/workflow-sdk": "2.0.6",
-        "conventional-changelog-conventionalcommits": "^5.0.0",
+        "@vertigis/workflow": "5.37.0",
+        "@vertigis/workflow-sdk": "4.1.0",
+        "conventional-changelog-conventionalcommits": "^7.0.2",
         "eslint-plugin-prettier": "^4.2.1",
-        "prettier": "^2.8.3",
-        "typescript": "^4.7.4"
+        "prettier": "^3.2.3",
+        "typescript": "^4.9.5"
     },
     "browserslist": [
         "last 2 chrome versions",
