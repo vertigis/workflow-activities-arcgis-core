@@ -10,11 +10,14 @@ import SceneView from "@arcgis/core/views/SceneView";
 
 /** An interface that defines the inputs of the activity. */
 interface CreateDirectLineMeasurement3DInputs {
+    /* eslint-disable @typescript-eslint/no-redundant-type-constituents */
+
     /**
      * @description Unit system (imperial or metric) or specific unit used for distance values.
      */
     linearUnit?: "metric" | "imperial" | "inches" | "feet" | "us-feet" | "yards" | "miles" | "nautical-miles" | "meters" | "kilometers" | string;
 
+    /* eslint-enable @typescript-eslint/no-redundant-type-constituents */
 }
 
 interface CreateDirectLineMeasurement3DOutputs {
