@@ -1,4 +1,4 @@
-import type { IActivityHandler } from "@geocortex/workflow/runtime";
+import type { IActivityHandler } from "@vertigis/workflow";
 import Layer from "@arcgis/core/layers/Layer";
 
 interface CreateLayerFromPortalItemInputs {
