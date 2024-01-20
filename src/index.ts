@@ -6,6 +6,7 @@ export { default as CreateDirectLineMeasurement3D } from "./activities/CreateDir
 export { default as CreateDistanceMeasurement2D } from "./activities/CreateDistanceMeasurement2D";
 export { default as CreateLayerFromArcGisServerUrl } from "./activities/CreateLayerFromArcGisServerUrl";
 export { default as CreateLayerFromPortalItem } from "./activities/CreateLayerFromPortalItem";
+export { default as CreateMediaLayer } from "./activities/CreateMediaLayer";
 export { default as CreateSketch } from "./activities/CreateSketch";
 export { default as RegisterToken } from "./activities/RegisterToken";
 export { default as SelectGraphics } from "./activities/SelectGraphics";
