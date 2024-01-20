@@ -37,9 +37,9 @@ interface CreateMediaLayerOutputs {
  * @supportedApps EXB, GWV
  */
 export default class CreateMediaLayer implements IActivityHandler {
-    async execute(
+    execute(
         inputs: CreateMediaLayerInputs,
-    ): Promise<CreateMediaLayerOutputs> {
+    ): CreateMediaLayerOutputs {
         const { properties, source, title } = inputs;
         if (!source) {
             throw new Error("source is required");
