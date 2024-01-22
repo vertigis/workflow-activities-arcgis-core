@@ -1,4 +1,4 @@
-import type { IActivityHandler } from "@geocortex/workflow/runtime/IActivityHandler";
+import type { IActivityHandler } from "@vertigis/workflow";
 import MediaLayer from "@arcgis/core/layers/MediaLayer";
 
 interface CreateMediaLayerInputs {
