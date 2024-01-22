@@ -18,7 +18,7 @@ interface CreateMediaLayerInputs {
     /**
      * @description Any of the layer's properties for constructing the layer instance (e.g. blendMode, opacity, etc.).
      */
-    properties?: any;
+    properties?: __esri.MediaLayerProperties;
 }
 
 interface CreateMediaLayerOutputs {
