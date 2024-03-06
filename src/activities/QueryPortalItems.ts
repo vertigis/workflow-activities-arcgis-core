@@ -1,5 +1,5 @@
 import Portal from "@arcgis/core/portal/Portal";
-import type { IActivityHandler } from "@vertigis/workflow";
+import type { IActivityHandler } from "@geocortex/workflow/runtime";
 
 interface QueryPortalItemsInputs {
     /**
@@ -15,7 +15,18 @@ interface QueryPortalItemsInputs {
     /**
      * @description A comma-delimited list of fields to sort.
      */
-    sortField?: "title" | "uploaded" | "modified" | "created" | "type" | "owner" | "avg-rating" | "num-ratings" | "num-comments" | "num-views" | string;
+    sortField?:
+        | "title"
+        | "uploaded"
+        | "modified"
+        | "created"
+        | "type"
+        | "owner"
+        | "avg-rating"
+        | "num-ratings"
+        | "num-comments"
+        | "num-views"
+        | string;
 
     /**
      * @description The order in which to sort the results. The default is "asc".
@@ -65,8 +76,19 @@ interface QueryPortalItemsOutputs {
  * @supportedApps EXB, GWV
  */
 export default class QueryPortalItems implements IActivityHandler {
-    async execute(inputs: QueryPortalItemsInputs): Promise<QueryPortalItemsOutputs> {
-        const { categories, extent, filter, num, query, sortOrder, sortField, start } = inputs;
+    async execute(
+        inputs: QueryPortalItemsInputs
+    ): Promise<QueryPortalItemsOutputs> {
+        const {
+            categories,
+            extent,
+            filter,
+            num,
+            query,
+            sortOrder,
+            sortField,
+            start,
+        } = inputs;
         const portal = Portal.getDefault();
 
         const result = await portal.queryItems({
@@ -75,8 +97,14 @@ export default class QueryPortalItems implements IActivityHandler {
             filter,
             num,
             query,
-            sortOrder: sortOrder as Exclude<QueryPortalItemsInputs["sortOrder"], string>,
-            sortField: sortField as Exclude<QueryPortalItemsInputs["sortField"], string>,
+            sortOrder: sortOrder as Exclude<
+                QueryPortalItemsInputs["sortOrder"],
+                string
+            >,
+            sortField: sortField as Exclude<
+                QueryPortalItemsInputs["sortField"],
+                string
+            >,
             start,
         });
 

@@ -1,5 +1,5 @@
 import Portal from "@arcgis/core/portal/Portal";
-import type { IActivityHandler } from "@vertigis/workflow";
+import type { IActivityHandler } from "@geocortex/workflow/runtime";
 
 interface GetPortalOutputs {
     /**

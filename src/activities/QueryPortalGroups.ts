@@ -1,5 +1,5 @@
 import Portal from "@arcgis/core/portal/Portal";
-import type { IActivityHandler } from "@vertigis/workflow";
+import type { IActivityHandler } from "@geocortex/workflow/runtime";
 
 interface QueryPortalGroupsInputs {
     /**
@@ -60,8 +60,11 @@ interface QueryPortalGroupsOutputs {
  * @supportedApps EXB, GWV
  */
 export default class QueryPortalGroups implements IActivityHandler {
-    async execute(inputs: QueryPortalGroupsInputs): Promise<QueryPortalGroupsOutputs> {
-        const { categories, filter, num, query, sortOrder, sortField, start } = inputs;
+    async execute(
+        inputs: QueryPortalGroupsInputs
+    ): Promise<QueryPortalGroupsOutputs> {
+        const { categories, filter, num, query, sortOrder, sortField, start } =
+            inputs;
         const portal = Portal.getDefault();
 
         const result = await portal.queryGroups({
@@ -69,8 +72,14 @@ export default class QueryPortalGroups implements IActivityHandler {
             filter,
             num,
             query,
-            sortOrder: sortOrder as Exclude<QueryPortalGroupsInputs["sortOrder"], string>,
-            sortField: sortField as Exclude<QueryPortalGroupsInputs["sortField"], string>,
+            sortOrder: sortOrder as Exclude<
+                QueryPortalGroupsInputs["sortOrder"],
+                string
+            >,
+            sortField: sortField as Exclude<
+                QueryPortalGroupsInputs["sortField"],
+                string
+            >,
             start,
         });
 
