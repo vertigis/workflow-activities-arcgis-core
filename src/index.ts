@@ -8,6 +8,10 @@ export { default as CreateLayerFromArcGisServerUrl } from "./activities/CreateLa
 export { default as CreateLayerFromPortalItem } from "./activities/CreateLayerFromPortalItem";
 export { default as CreateMediaLayer } from "./activities/CreateMediaLayer";
 export { default as CreateSketch } from "./activities/CreateSketch";
+export { default as GetPortal } from "./activities/GetPortal";
+export { default as QueryPortalGroups } from "./activities/QueryPortalGroups";
+export { default as QueryPortalItems } from "./activities/QueryPortalItems";
+export { default as QueryPortalUsers } from "./activities/QueryPortalUsers";
 export { default as RegisterToken } from "./activities/RegisterToken";
 export { default as SelectGraphics } from "./activities/SelectGraphics";
 export { default as SendRequest } from "./activities/SendRequest";
