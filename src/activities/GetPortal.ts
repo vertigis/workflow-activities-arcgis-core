@@ -12,7 +12,7 @@ interface GetPortalOutputs {
  * @category ArcGIS Maps SDK for JavaScript
  * @clientOnly
  * @defaultName portal
- * @description Gets the default portal instance.
+ * @description Gets the default Portal instance.
  * @helpUrl https://developers.arcgis.com/javascript/latest/api-reference/esri-portal-Portal.html#getDefault
  * @supportedApps EXB, GWV
  */
