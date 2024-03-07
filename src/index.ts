@@ -9,6 +9,7 @@ export { default as CreateLayerFromPortalItem } from "./activities/CreateLayerFr
 export { default as CreateMediaLayer } from "./activities/CreateMediaLayer";
 export { default as CreateSketch } from "./activities/CreateSketch";
 export { default as GetPortal } from "./activities/GetPortal";
+export { default as GetPortalGroupMembers } from "./activities/GetPortalGroupMembers";
 export { default as QueryPortalGroups } from "./activities/QueryPortalGroups";
 export { default as QueryPortalItems } from "./activities/QueryPortalItems";
 export { default as QueryPortalUsers } from "./activities/QueryPortalUsers";
