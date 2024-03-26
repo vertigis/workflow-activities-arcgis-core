@@ -3,11 +3,13 @@ import type MapView from "@arcgis/core/views/MapView";
 import type {
     IActivityHandler,
     IActivityContext,
-} from "@geocortex/workflow/runtime/IActivityHandler";
-import { MapProvider } from "@geocortex/workflow/runtime/activities/arcgis/MapProvider";
-import { activate } from "@geocortex/workflow/runtime/Hooks";
+} from "@vertigis/workflow/IActivityHandler";
+import { MapProvider } from "@vertigis/workflow/activities/arcgis/MapProvider";
+import { activate } from "@vertigis/workflow/Hooks";
 
 export interface TakeScreenshotInputs {
+    /* eslint-disable @typescript-eslint/no-redundant-type-constituents */
+
     /**
      * @description The width of the screenshot (defaults to the area width).
      */
@@ -66,6 +68,8 @@ export interface TakeScreenshotInputs {
      * @description Indicates whether the view padding should be ignored. The default is false.
      */
     ignorePadding?: boolean;
+    
+    /* eslint-enable @typescript-eslint/no-redundant-type-constituents */
 }
 
 export interface TakeScreenshotOutputs {

@@ -1,7 +1,9 @@
-import type { IActivityHandler } from "@geocortex/workflow/runtime";
+import type { IActivityHandler } from "@vertigis/workflow";
 import config from "@arcgis/core/config";
 
 interface SetGlobalPropertyInputs {
+    /* eslint-disable @typescript-eslint/no-redundant-type-constituents */
+
     /**
      * @description The name of the global property to modify.
      * @required
@@ -20,6 +22,8 @@ interface SetGlobalPropertyInputs {
      * @required
      */
     value: string;
+    
+    /* eslint-enable @typescript-eslint/no-redundant-type-constituents */
 }
 
 interface SetGlobalPropertyOutputs {}
