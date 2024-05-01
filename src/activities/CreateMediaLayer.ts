@@ -1,4 +1,4 @@
-import type { IActivityHandler } from "@geocortex/workflow/runtime/IActivityHandler";
+import type { IActivityHandler } from "@vertigis/workflow";
 import MediaLayer from "@arcgis/core/layers/MediaLayer";
 
 interface CreateMediaLayerInputs {
@@ -18,7 +18,7 @@ interface CreateMediaLayerInputs {
     /**
      * @description Any of the layer's properties for constructing the layer instance (e.g. blendMode, opacity, etc.).
      */
-    properties?: any;
+    properties?: __esri.MediaLayerProperties;
 }
 
 interface CreateMediaLayerOutputs {

@@ -2,9 +2,9 @@
 import type {
     IActivityHandler,
     IActivityContext,
-} from "@geocortex/workflow/runtime/IActivityHandler";
-import { MapProvider } from "@geocortex/workflow/runtime/activities/arcgis/MapProvider";
-import { activate } from "@geocortex/workflow/runtime/Hooks";
+} from "@vertigis/workflow/IActivityHandler";
+import { MapProvider } from "@vertigis/workflow/activities/arcgis/MapProvider";
+import { activate } from "@vertigis/workflow/Hooks";
 import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel";
 import Graphic from "@arcgis/core/Graphic";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
@@ -13,6 +13,8 @@ import MapView from "@arcgis/core/views/MapView";
 import SketchDefaults from "./SketchDefaults";
 
 export interface CreateSketchInputs {
+    /* eslint-disable @typescript-eslint/no-redundant-type-constituents */
+
     /**
      * @description This property reflects the create tool used to sketch the graphic.
      * @required
@@ -44,6 +46,8 @@ export interface CreateSketchInputs {
      * @link https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Sketch-SketchViewModel.html#create
      */
     createOptions?: __esri.SketchViewModelCreateCreateOptions;
+    
+    /* eslint-enable @typescript-eslint/no-redundant-type-constituents */
 }
 
 export interface CreateSketchOutputs {
@@ -101,8 +105,8 @@ export default class CreateSketch implements IActivityHandler {
                 case "simple-line":
                     view.polylineSymbol = symbol;
             }
-        } 
-        view.create(sketchType as any, createOptions);
+        }
+        view.create(sketchType as Parameters<typeof view.create>[0], createOptions);
         const output: Graphic | undefined = await new Promise((resolve) => {
             view.on("create", function (event) {
                 if (event.state === "complete") {

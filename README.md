@@ -7,11 +7,11 @@ This project contains activities for interacting with the [ArcGIS Maps SDK for J
 
 ### VertiGIS Studio Workflow Versions
 
-These activities are designed to work with VertiGIS Studio Workflow versions `5.30.1` and above.
+These activities are designed to work with VertiGIS Studio Workflow versions `5.31` and above.
 
 ### ArcGIS Maps SDK for JavaScript Versions
 
-These activities depend on the ArcGIS Maps SDK for JavaScript version `4.21` or above to be present in the host application.
+These activities depend on the ArcGIS Maps SDK for JavaScript version `4.28` or above to be present in the host application.
 
 ## Usage
 To use these activities in [VertiGIS Studio Workflow Designer](https://apps.vertigisstudio.com/workflow/designer/) you need to register an activity pack and then add the activities to a workflow.
@@ -25,8 +25,10 @@ To use these activities in [VertiGIS Studio Workflow Designer](https://apps.vert
     - Purpose: `Ready To Use`
     - API: `JavaScript`
     - URL: The URL to this activity pack manifest
-        - Use https://unpkg.com/@vertigis/workflow-activities-arcgis-core/activitypack.json for the latest version
         - Use https://unpkg.com/@vertigis/workflow-activities-arcgis-core@1.0.0/activitypack.json for a specific version
+        - Use https://unpkg.com/@vertigis/workflow-activities-arcgis-core@1/activitypack.json for the latest revision of a specific major version
+        - Use https://unpkg.com/@vertigis/workflow-activities-arcgis-core/activitypack.json for the latest version (not recommended for production use)
+        - Use https://localhost:5000/activitypack.json for a local development version
     - Title: Your desired title
     - Tags: Must include `geocortex-workflow-activity-pack`
 1. Reload [VertiGIS Studio Workflow Designer](https://apps.vertigisstudio.com/workflow/designer/)

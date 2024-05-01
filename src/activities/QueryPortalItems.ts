@@ -1,7 +1,9 @@
 import Portal from "@arcgis/core/portal/Portal";
-import type { IActivityHandler } from "@geocortex/workflow/runtime";
+import type { IActivityHandler } from "@vertigis/workflow";
 
 interface QueryPortalItemsInputs {
+    /* eslint-disable @typescript-eslint/no-redundant-type-constituents */
+    
     /**
      * @description The query string used for the search.
      */
@@ -53,6 +55,8 @@ interface QueryPortalItemsInputs {
      * @description An array of categories stored within the item.
      */
     categories?: (string | string[])[];
+    
+    /* eslint-enable @typescript-eslint/no-redundant-type-constituents */
 }
 
 interface QueryPortalItemsOutputs {

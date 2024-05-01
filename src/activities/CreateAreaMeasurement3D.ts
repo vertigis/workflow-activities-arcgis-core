@@ -2,18 +2,22 @@
 import type {
     IActivityHandler,
     IActivityContext,
-} from "@geocortex/workflow/runtime/IActivityHandler";
-import { MapProvider } from "@geocortex/workflow/runtime/activities/arcgis/MapProvider";
-import { activate } from "@geocortex/workflow/runtime/Hooks";
+} from "@vertigis/workflow/IActivityHandler";
+import { MapProvider } from "@vertigis/workflow/activities/arcgis/MapProvider";
+import { activate } from "@vertigis/workflow/Hooks";
 import AreaMeasurement3D from "@arcgis/core/widgets/AreaMeasurement3D";
 import SceneView from "@arcgis/core/views/SceneView";
 
 /** An interface that defines the inputs of the activity. */
 interface CreateAreaMeasurement3DInputs {
+    /* eslint-disable @typescript-eslint/no-redundant-type-constituents */
+
     /**
      * @description Unit system (imperial or metric) or specific unit used for area values.
      */
     areaUnit?: "metric" | "imperial" | "square-inches" | "square-feet" | "square-us-feet" | "square-yards" | "square-miles" | "square-meters" | "square-kilometers" | "acres" | "ares" | "hectares" | string;
+    
+    /* eslint-enable @typescript-eslint/no-redundant-type-constituents */
 }
 
 interface CreateAreaMeasurement3DOutputs {

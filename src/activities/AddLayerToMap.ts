@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import type { IActivityHandler } from "@geocortex/workflow/runtime";
-import { MapProvider } from "@geocortex/workflow/runtime/activities/arcgis/MapProvider";
-import { activate } from "@geocortex/workflow/runtime/Hooks";
-import type { IActivityContext } from "@geocortex/workflow/runtime/IActivityHandler";
+import type { IActivityHandler } from "@vertigis/workflow";
+import { MapProvider } from "@vertigis/workflow/activities/arcgis/MapProvider";
+import { activate } from "@vertigis/workflow/Hooks";
+import type { IActivityContext } from "@vertigis/workflow/IActivityHandler";
 import WebMap from "@arcgis/core/WebMap";
 
 interface AddLayerToMapInputs {

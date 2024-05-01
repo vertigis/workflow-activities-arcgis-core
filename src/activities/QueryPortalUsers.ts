@@ -1,7 +1,9 @@
 import Portal from "@arcgis/core/portal/Portal";
-import type { IActivityHandler } from "@geocortex/workflow/runtime";
+import type { IActivityHandler } from "@vertigis/workflow";
 
 interface QueryPortalUsersInputs {
+    /* eslint-disable @typescript-eslint/no-redundant-type-constituents */
+
     /**
      * @description The query string used for the search.
      */
@@ -32,6 +34,8 @@ interface QueryPortalUsersInputs {
      * @description The index of the first entry in the result set response. The default is 1. The index is 1-based. The start property, along with the number property can be used to paginate the search results.
      */
     start?: number;
+    
+    /* eslint-enable @typescript-eslint/no-redundant-type-constituents */
 }
 
 interface QueryPortalUsersOutputs {

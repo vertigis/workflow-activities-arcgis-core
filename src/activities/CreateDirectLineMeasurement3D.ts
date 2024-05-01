@@ -2,19 +2,22 @@
 import type {
     IActivityHandler,
     IActivityContext,
-} from "@geocortex/workflow/runtime/IActivityHandler";
-import { MapProvider } from "@geocortex/workflow/runtime/activities/arcgis/MapProvider";
-import { activate } from "@geocortex/workflow/runtime/Hooks";
+} from "@vertigis/workflow/IActivityHandler";
+import { MapProvider } from "@vertigis/workflow/activities/arcgis/MapProvider";
+import { activate } from "@vertigis/workflow/Hooks";
 import DirectLineMeasurement3D from "@arcgis/core/widgets/DirectLineMeasurement3D";
 import SceneView from "@arcgis/core/views/SceneView";
 
 /** An interface that defines the inputs of the activity. */
 interface CreateDirectLineMeasurement3DInputs {
+    /* eslint-disable @typescript-eslint/no-redundant-type-constituents */
+
     /**
      * @description Unit system (imperial or metric) or specific unit used for distance values.
      */
     linearUnit?: "metric" | "imperial" | "inches" | "feet" | "us-feet" | "yards" | "miles" | "nautical-miles" | "meters" | "kilometers" | string;
 
+    /* eslint-enable @typescript-eslint/no-redundant-type-constituents */
 }
 
 interface CreateDirectLineMeasurement3DOutputs {

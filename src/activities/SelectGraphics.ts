@@ -4,9 +4,9 @@ import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import type {
     IActivityHandler,
     IActivityContext,
-} from "@geocortex/workflow/runtime/IActivityHandler";
-import { MapProvider } from "@geocortex/workflow/runtime/activities/arcgis/MapProvider";
-import { activate } from "@geocortex/workflow/runtime/Hooks";
+} from "@vertigis/workflow/IActivityHandler";
+import { MapProvider } from "@vertigis/workflow/activities/arcgis/MapProvider";
+import { activate } from "@vertigis/workflow/Hooks";
 import MapView from "@arcgis/core/views/MapView";
 
 interface SelectGraphicsInputs {
