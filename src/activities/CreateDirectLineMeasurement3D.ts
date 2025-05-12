@@ -24,16 +24,16 @@ interface CreateDirectLineMeasurement3DOutputs {
 
     measurementMode?: "euclidean" | "geodesic";
     directDistance?: {
-        text: string;
-        state: string;
+        text: string | nullish;
+        state: string | nullish;
     };
     horizontalDistance?: {
-        text: string;
-        state: string;
+        text: string | nullish;
+        state: string | nullish;
     };
     verticalDistance?: {
-        text: string;
-        state: string;
+        text: string | nullish;
+        state: string | nullish;
     };
 }
 
@@ -76,7 +76,7 @@ export default class CreateDirectLineMeasurement3D implements IActivityHandler {
             = await new Promise((resolve) => {
                 watchHandle = measurementWidget.watch("viewModel.state", function (state: string) {
                     if (state === "measured") {
-                        resolve(measurementWidget.viewModel.measurement);
+                        resolve(measurementWidget.viewModel.measurement ?? undefined);
                     } else if (state === "ready") {
                         resolve(undefined);
                     }

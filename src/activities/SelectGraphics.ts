@@ -83,14 +83,14 @@ export default class SelectGraphics implements IActivityHandler {
                         resolve(undefined);
                     }
                 };
-                mapView.container.ownerDocument?.addEventListener("keydown", keyDown);
+                mapView?.container?.ownerDocument?.addEventListener("keydown", keyDown);
             });
         } finally {
             pointerHandle?.remove();
             clickHandle?.remove();
             highlightHandle?.remove();
             if (keyDown) {
-                mapView.container.ownerDocument?.removeEventListener("keydown", keyDown);
+                mapView?.container?.ownerDocument?.removeEventListener("keydown", keyDown);
             }
         }
 

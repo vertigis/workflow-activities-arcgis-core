@@ -16,7 +16,7 @@ interface CreateAreaMeasurement3DInputs {
      * @description Unit system (imperial or metric) or specific unit used for area values.
      */
     areaUnit?: "metric" | "imperial" | "square-inches" | "square-feet" | "square-us-feet" | "square-yards" | "square-miles" | "square-meters" | "square-kilometers" | "acres" | "ares" | "hectares" | string;
-    
+
     /* eslint-enable @typescript-eslint/no-redundant-type-constituents */
 }
 
@@ -24,12 +24,12 @@ interface CreateAreaMeasurement3DOutputs {
 
     mode?: "euclidean" | "geodesic";
     area?: {
-        text: string;
-        state: string;
+        text: string | nullish;
+        state: string | nullish;
     };
     perimeterLength?: {
-        text: string;
-        state: string;
+        text: string | nullish;
+        state: string | nullish;
     };
 
 }
@@ -72,7 +72,7 @@ export default class CreateAreaMeasurement3D implements IActivityHandler {
             = await new Promise((resolve) => {
                 watchHandle = measurementWidget.watch("viewModel.state", function (state: string) {
                     if (state === "measured") {
-                        resolve(measurementWidget.viewModel.measurement);
+                        resolve(measurementWidget.viewModel.measurement ?? undefined);
                     } else if (state === "ready") {
                         resolve(undefined);
                     }

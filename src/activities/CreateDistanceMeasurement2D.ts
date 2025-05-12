@@ -66,7 +66,7 @@ export default class CreateDistanceMeasurement2D implements IActivityHandler {
             = await new Promise((resolve) => {
                 watchHandle = measurementWidget.watch("viewModel.state", function (state: string) {
                     if (state === "measured") {
-                        resolve(measurementWidget.viewModel.measurement);
+                        resolve(measurementWidget.viewModel.measurement ?? undefined);
                     } else if (state === "ready") {
                         resolve(undefined);
                     }
