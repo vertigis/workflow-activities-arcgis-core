@@ -60,8 +60,10 @@ export default class CreateMediaLayer implements IActivityHandler {
                 source = new ImageElement(source as __esri.ImageElementProperties);
             } else if ((source as __esri.VideoElementProperties).video) {
                 source = new VideoElement(source as __esri.VideoElementProperties);
-            } else {
+            } else if ((source as __esri.LocalMediaElementSourceProperties).elements) {
                 source = new LocalMediaElementSource(source as __esri.LocalMediaElementSourceProperties);
+            } else {
+                throw new Error("source is required");
             }
         }
 
