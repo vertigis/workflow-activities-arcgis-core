@@ -74,15 +74,15 @@ interface SendRequestOutputs {
         /**
          * Indicates if the request required https.
          */
-        ssl?: boolean;
+        ssl?: boolean | nullish;
         /**
          * The URL used to request the data.
          */
-        url?: string;
+        url?: string | nullish;
         /**
          * Method for getting a header sent from the server.
          */
-        getHeader?: (headerName: string) => string;
+        getHeader?: (headerName: string) => string | nullish;
     };
 }
 

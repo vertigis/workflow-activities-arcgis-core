@@ -1,5 +1,8 @@
 import type { IActivityHandler } from "@vertigis/workflow";
 import MediaLayer from "@arcgis/core/layers/MediaLayer";
+import ImageElement from "@arcgis/core/layers/support/ImageElement";
+import VideoElement from "@arcgis/core/layers/support/VideoElement";
+import LocalMediaElementSource from "@arcgis/core/layers/support/LocalMediaElementSource.js";
 
 interface CreateMediaLayerInputs {
     /**
@@ -7,10 +10,12 @@ interface CreateMediaLayerInputs {
      * @required
      */
     source:
-        | __esri.ImageElement
-        | __esri.LocalMediaElementSource
-        | __esri.VideoElement
-        | any[];
+    | __esri.ImageElement
+    | __esri.LocalMediaElementSource
+    | __esri.VideoElement
+    | __esri.ImageElementProperties
+    | __esri.VideoElementProperties
+    | __esri.LocalMediaElementSourceProperties;
     /**
      * @description The title of the layer.
      */
@@ -40,13 +45,30 @@ export default class CreateMediaLayer implements IActivityHandler {
     execute(
         inputs: CreateMediaLayerInputs,
     ): CreateMediaLayerOutputs {
-        const { properties, source, title } = inputs;
+        let {source } = inputs;
+        const { properties, title } = inputs;
+
         if (!source) {
             throw new Error("source is required");
         }
 
+        if (!(source instanceof ImageElement ||
+            source instanceof LocalMediaElementSource ||
+            source instanceof VideoElement)) {
+
+            if ((source as __esri.ImageElementProperties).image) {
+                source = new ImageElement(source as __esri.ImageElementProperties);
+            } else if ((source as __esri.VideoElementProperties).video) {
+                source = new VideoElement(source as __esri.VideoElementProperties);
+            } else if ((source as __esri.LocalMediaElementSourceProperties).elements) {
+                source = new LocalMediaElementSource(source as __esri.LocalMediaElementSourceProperties);
+            } else {
+                throw new Error("source is required");
+            }
+        }
+
         const layer = new MediaLayer({
-            source,
+            source: source as __esri.ImageElement | __esri.VideoElement | __esri.LocalMediaElementSource,
             title,
             ...properties,
         });
