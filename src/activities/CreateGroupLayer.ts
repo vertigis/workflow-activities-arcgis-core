@@ -11,6 +11,11 @@ interface CreateGroupLayerInputs {
      * @required
      */
     name?: string;
+
+    /**
+     * @description The collection of layers to be added as child elements.
+     */
+    layers?: __esri.Layer[];
 }
 
 interface CreateGroupLayerOutputs {
@@ -25,12 +30,13 @@ interface CreateGroupLayerOutputs {
  * @category ArcGIS Maps SDK for JavaScript
  * @helpUrl https://developers.arcgis.com/javascript/latest/api-reference/esri-layers-GroupLayer.html
  * @description Creates a new group layer item
+ * @supportedApps EXB, GWV
  */
 @activate(MapProvider)
 export default class CreateGroupLayer implements IActivityHandler {
     
     async execute(inputs: CreateGroupLayerInputs, context: IActivityContext, type: typeof MapProvider): Promise<CreateGroupLayerOutputs> {
-        const { name } = inputs;
+        const { name, layers } = inputs;
         if (!name) {
             throw new Error("name is required");
         }
@@ -43,7 +49,7 @@ export default class CreateGroupLayer implements IActivityHandler {
             throw new Error("map is required");
         }
 
-        const layer = new GroupLayer({ title: name });  
+        const layer = new GroupLayer({ title: name, layers: layers || [] });  
         map.add(layer);
 
         return { result: layer };
