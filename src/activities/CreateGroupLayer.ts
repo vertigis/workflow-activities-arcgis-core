@@ -10,7 +10,7 @@ interface CreateGroupLayerInputs {
      * @description The name of the group layer to create.
      * @required
      */
-    name?: string;
+    name: string;
 
     /**
      * @description The collection of layers to be added as child elements.
