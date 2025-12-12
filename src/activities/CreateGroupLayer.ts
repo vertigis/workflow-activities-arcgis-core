@@ -7,15 +7,14 @@ import { activate } from "@vertigis/workflow/Hooks";
 
 interface CreateGroupLayerInputs {
     /**
-     * @description The name of the group layer to create.
-     * @required
+     * @description The title of the group layer to create.
      */
-    name: string;
+    title?: string;
 
     /**
-     * @description The collection of layers to be added as child elements.
+     * @description Any of the layer's properties for constructing the layer instance (e.g. blendMode, opacity, etc.).
      */
-    layers?: __esri.Layer[];
+    properties?: __esri.GroupLayerProperties;
 }
 
 interface CreateGroupLayerOutputs {
@@ -36,10 +35,7 @@ interface CreateGroupLayerOutputs {
 export default class CreateGroupLayer implements IActivityHandler {
     
     async execute(inputs: CreateGroupLayerInputs, context: IActivityContext, type: typeof MapProvider): Promise<CreateGroupLayerOutputs> {
-        const { name, layers } = inputs;
-        if (!name) {
-            throw new Error("name is required");
-        }
+        const { properties, title } = inputs;
         
         const mapProvider = type.create();
         await mapProvider.load();
@@ -49,7 +45,7 @@ export default class CreateGroupLayer implements IActivityHandler {
             throw new Error("map is required");
         }
 
-        const layer = new GroupLayer({ title: name, layers: layers || [] });  
+        const layer = new GroupLayer({ title, ...properties });  
         map.add(layer);
 
         return { result: layer };
