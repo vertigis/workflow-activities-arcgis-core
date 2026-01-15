@@ -1,9 +1,5 @@
 import type { IActivityHandler } from "@vertigis/workflow";
-import { MapProvider } from "@vertigis/workflow/activities/arcgis/MapProvider";
-import type { IActivityContext } from "@vertigis/workflow/IActivityHandler";
-import WebMap from "@arcgis/core/WebMap";
 import GroupLayer from "@arcgis/core/layers/GroupLayer";
-import { activate } from "@vertigis/workflow/Hooks";
 
 interface CreateGroupLayerInputs {
     /**
@@ -32,8 +28,7 @@ interface CreateGroupLayerOutputs {
  * @supportedApps EXB, GWV
  */
 export default class CreateGroupLayer implements IActivityHandler {
-    
-    async execute(inputs: CreateGroupLayerInputs): Promise<CreateGroupLayerOutputs> {
+    execute(inputs: CreateGroupLayerInputs): CreateGroupLayerOutputs {
         const { properties, title } = inputs;
         const layer = new GroupLayer({ title, ...properties });  
 
