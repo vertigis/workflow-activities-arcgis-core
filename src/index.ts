@@ -4,6 +4,7 @@ export { default as CreateAreaMeasurement2D } from "./activities/CreateAreaMeasu
 export { default as CreateAreaMeasurement3D } from "./activities/CreateAreaMeasurement3D";
 export { default as CreateDirectLineMeasurement3D } from "./activities/CreateDirectLineMeasurement3D";
 export { default as CreateDistanceMeasurement2D } from "./activities/CreateDistanceMeasurement2D";
+export { default as CreateGroupLayer } from "./activities/CreateGroupLayer";
 export { default as CreateLayerFromArcGisServerUrl } from "./activities/CreateLayerFromArcGisServerUrl";
 export { default as CreateLayerFromPortalItem } from "./activities/CreateLayerFromPortalItem";
 export { default as CreateMediaLayer } from "./activities/CreateMediaLayer";
