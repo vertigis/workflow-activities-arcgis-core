@@ -31,22 +31,11 @@ interface CreateGroupLayerOutputs {
  * @description Creates a new group layer item
  * @supportedApps EXB, GWV
  */
-@activate(MapProvider)
 export default class CreateGroupLayer implements IActivityHandler {
     
-    async execute(inputs: CreateGroupLayerInputs, context: IActivityContext, type: typeof MapProvider): Promise<CreateGroupLayerOutputs> {
+    async execute(inputs: CreateGroupLayerInputs): Promise<CreateGroupLayerOutputs> {
         const { properties, title } = inputs;
-        
-        const mapProvider = type.create();
-        await mapProvider.load();
-
-        const map = mapProvider.map as WebMap;
-        if (!map) {
-            throw new Error("map is required");
-        }
-
         const layer = new GroupLayer({ title, ...properties });  
-        map.add(layer);
 
         return { result: layer };
     }
